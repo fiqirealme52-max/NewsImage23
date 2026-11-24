@@ -818,7 +818,7 @@ LEADS = [
 ]
 MEDS = [
     (18, "SUN", sc_dymer, "DYMER · UKRAINE · SUN", True,
-     "Boy, 7, pulled alive after 14 hours under rubble",
+     "Boy, 7, pulled alive after 14 hours",
      "11 dead; none missing. Vyshneve: 3 killed, 15 hurt. (BBC, AFP)"),
     (4, "MON", sc_awacs, "NATO · POLAND · MON", False,
      "NATO sends AWACS to Poland",
