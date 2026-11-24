@@ -772,15 +772,15 @@ def proj(lon, lat):
 for poly in CONTINENTS:
     d.polygon([proj(lon, lat) for lon, lat in poly], fill=(228, 214, 178))
 PINS = [
-    (1, -74, 40.7, -10, -4, None, None), (2, 20.1, 32.1, 0, 0, "Benghazi", (-20, 10)),
-    (3, 30.7, 36.9, 6, 6, "Antalya", (8, -4)), (4, 21, 52.2, -2, -16, None, None),
+    (1, -74, 40.7, -10, -4, None, None), (2, 20.1, 32.1, 4, 2, "Benghazi", (-28, 14)),
+    (3, 30.7, 36.9, 6, 6, "Antalya", (8, -18)), (4, 21, 52.2, -2, -16, None, None),
     (5, 77.2, 28.6, -8, 4, None, None), (6, 39, 22.8, 8, 8, None, None),
     (7, 172.2, -13.7, 0, 0, None, None), (8, 8.5, 47.4, 0, -14, None, None),
     (9, -77, 38.9, -2, 8, None, None), (10, 94, 28, 8, -2, None, None),
     (11, 84, 28.5, 0, -8, None, None), (12, -0.1, 51.5, -16, -10, None, None),
     (13, 7.7, 45.1, 4, 8, None, None), (14, 101.5, 3.1, -6, 8, None, None),
-    (15, 90.4, 23.8, 10, 10, None, None), (16, 127, 37.5, 0, 0, "Seoul", (9, -4)),
-    (17, 4.4, 50.8, -6, 10, "Brussels", (-50, -12)), (18, 30.3, 50.8, 12, -12, "Dymer", (14, -14)),
+    (15, 90.4, 23.8, 10, 10, None, None), (16, 127, 37.5, 0, 0, "Seoul", (13, -4)),
+    (17, 4.4, 50.8, -6, 10, "Brussels", (-58, -2)), (18, 30.3, 50.8, 12, -12, "Dymer", (14, -14)),
 ]
 for n, lon, lat, dx, dy, lab, loff in PINS:
     tx, ty = proj(lon, lat)
@@ -793,7 +793,8 @@ for n, lon, lat, dx, dy, lab, loff in PINS:
     s = str(n)
     d.text((px - fn.getlength(s) / 2, py - 5.5), s, font=fn, fill=(255, 255, 255))
     if lab:
-        d.text((px + loff[0], py + loff[1]), lab, font=F(DSB, 8), fill=(255, 255, 255))
+        d.text((px + loff[0], py + loff[1]), lab, font=F(DSB, 8), fill=(255, 255, 255),
+               stroke_width=1, stroke_fill=NAVY_DK)
 d.text((mx0 + 6, my1 - 13), "RED NUMBERS MARK STORIES 1–18 · POSITIONS APPROXIMATE",
        font=F(DSB, 8), fill=(200, 205, 215))
 
@@ -822,7 +823,7 @@ BRIEFS = [
     "40 Centrica: bills may rise 26% (BBC, SUN)",
 ]
 cols = [BRIEFS[0:8], BRIEFS[8:15], BRIEFS[15:22]]
-fb = F(DJ, 9)
+fb = F(DJ, 8.5)
 for ci, col in enumerate(cols):
     cx = 428 + ci * 196
     cy = 824
@@ -830,8 +831,8 @@ for ci, col in enumerate(cols):
         lines = wrap(b, fb, 190)
         for ln in lines:
             d.text((cx, cy), ln, font=fb, fill=INK)
-            cy += 11
-        cy += 2.5
+            cy += 10
+        cy += 1.5
 
 # ---------- DATE CHECK ----------
 d.rectangle([8, 938, W - 8, 988], outline=RED, width=2)
