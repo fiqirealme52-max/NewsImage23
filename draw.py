@@ -141,7 +141,7 @@ f_kick = F(DSB, 15)
 f_mast = F(DJB, 48)
 f_sub = F(NTI, 17)
 d.text((8, 6), "THE WORLD IN ONE DAY", font=f_kick, fill=RED)
-r = "40 STORIES · 6 REGIONS · MONDAY 23 NOVEMBER 2026 · WIRES TO 06:49 UTC"
+r = "40 STORIES · 6 REGIONS · MONDAY 23 NOVEMBER 2026 · WIRES TO 06:49 UTC TUE"
 d.text((W - 8 - F(DSB, 11).getlength(r), 9), r, font=F(DSB, 11), fill=SOFT)
 d.line([(8, 24), (W - 8, 24)], fill=(190, 175, 150), width=1)
 d.text(((W - F(DJB, 48).getlength("Monday 23 November 2026")) / 2, 27),
@@ -154,13 +154,15 @@ d.text(((W - F(NTI, 17).getlength(sub)) / 2, 84), sub, font=f_sub, fill=RED)
 # 05:23 Dymer 11th body (infokava live, 07:23 Kyiv = 05:23 UTC) /
 # 05:30 Taiex +2.16% close (TWSE session ends 13:30 Taipei = 05:30 UTC) /
 # 06:30 Kospi -3.31% close (KRX session ends 15:30 Seoul = 06:30 UTC) /
-# 08:38 COP31 pledge 90+ (metropunch published 2026-11-23T08:38:21Z) /
+# 08:38 COP31 failure reported (metropunch 2026-11-23T08:38:21Z; collapse itself Sun) /
+# NOTE: Selangor 06:00 NOT used in timeline — ADINet "6.00 am local" (MYT) = 22:00 UTC Sun,
+# not a Monday UTC event time. The 1,582 figure stays in M14's deck only.
 # 14:30 Nasdaq opens (NYSE/Nasdaq 09:30 ET = 14:30 UTC) /
 # 19:45 Monza kicks off (Serie A, 19:45 UTC) /
 # 20:00 Brentford kicks off (Premier League, 20:00 UTC) /
 # 21:00 NVDA +31.5% close (NYSE close 16:00 ET = 21:00 UTC; +31.48% R4 F1)
 tl = [("05:23", "Dymer 11th body"), ("05:30", "Taiex +2.16%"),
-      ("06:30", "Kospi \u22123.31%"), ("08:38", "COP31 pledge 90+"),
+      ("06:30", "Kospi \u22123.31%"), ("08:38", "COP31 failure reported"),
       ("14:30", "Nasdaq opens"), ("19:45", "Monza kicks off"),
       ("20:00", "Brentford kicks off"), ("21:00", "NVDA +31.5% close")]
 d.rectangle([8, 104, W - 8, 122], fill=(245, 238, 220), outline=(200, 185, 160))
@@ -376,7 +378,11 @@ def sc_nepal(d, x, y, w, h):
     d.text((x + (w - _nf.getlength(_np)) / 2, y + 2), _np, font=_nf, fill=INK)
     d.rectangle([x + w * 0.10, y + h * 0.06, x + w * 0.22, y + h * 0.13], fill=(255, 153, 51))
     d.rectangle([x + w * 0.10, y + h * 0.13, x + w * 0.22, y + h * 0.20], fill=(255, 255, 255))
-    d.rectangle([x + w * 0.80, y + h * 0.28, x + w * 0.92, y + h * 0.42], fill=(220, 20, 60))
+    # Nepal flag on a pole on the left peak (old red block straddled the slope) — pennant
+    # shape echoes the double-pennant Nepal flag; pole base sits on the peak point
+    d.line([(x + w * 0.25, y + h * 0.05), (x + w * 0.25, y + h * 0.18)], fill=(60, 60, 60), width=2)
+    d.polygon([(x + w * 0.25, y + h * 0.05), (x + w * 0.305, y + h * 0.08),
+               (x + w * 0.25, y + h * 0.11)], fill=(220, 20, 60))
 
 def sc_houthis(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (12, 16, 34), (50, 44, 70))
@@ -676,7 +682,7 @@ def sc_kospi(d, x, y, w, h):
               fill=(240, 70, 60))
     # intraday path: plunge to the -5.8% low, then recovery to the -3.31% close
     _op = [(x + 6, y + h * 0.20), (x + w * 0.30, y + h * 0.45), (x + w * 0.55, y + h * 0.82),
-           (x + w * 0.75, y + h * 0.70), (x + w - 6, y + h * 0.62)]
+           (x + w * 0.75, y + h * 0.80), (x + w - 6, y + h * 0.78)]
     chart(d, _op, (230, 140, 40), 2)
     # close label with a dark backing so it reads over both chart lines
     _k16 = "\u22123.31%"
@@ -861,7 +867,7 @@ MEDS = [
 # ---------- leads row ----------
 # verification status per story: ON RECORD = official source, REPORTED = press-reported,
 # CLAIM = single-source claim (M6: only the Houthis claim the hit)
-CHIP = {1: "REPORTED", 2: "REPORTED", 3: "REPORTED", 4: "ON RECORD",
+CHIP = {1: "ON RECORD", 2: "REPORTED", 3: "REPORTED", 4: "ON RECORD",
         5: "ON RECORD", 6: "CLAIM", 7: "ON RECORD", 8: "ON RECORD",
         9: "REPORTED", 10: "REPORTED", 11: "ON RECORD", 12: "REPORTED",
         13: "ON RECORD", 14: "REPORTED", 15: "REPORTED", 16: "ON RECORD",
@@ -929,7 +935,7 @@ for _gy in range(my0 + 3, my1 - 2, 4):
         if any(_inside(_gx, _gy, _p) for _p in _CONT):
             d.ellipse([_gx - 1, _gy - 1, _gx + 1, _gy + 1], fill=(90, 130, 160))
 PINS = [
-    (1, -74, 40.7, -10, -4, None, None), (2, 20.1, 32.1, 4, 2, "Benghazi", (-28, 14)),
+    (1, -74, 40.7, -10, -4, None, None), (2, 20.1, 32.1, 4, 2, "Benghazi", (-28, -16)),
     (3, 30.7, 36.9, 9, 12, "Antalya", (8, -18)), (4, 21, 52.2, -2, -20, None, None),
     (5, 77.2, 28.6, -8, 4, None, None), (6, 39, 22.8, 12, 12, None, None),
     (7, 172.2, -13.7, 0, 0, None, None), (8, 8.5, 47.4, -11, -22, None, None),
