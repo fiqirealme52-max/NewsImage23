@@ -20,7 +20,7 @@ SOFT = (74, 66, 58)
 RED = (179, 39, 30)
 RED_DK = (140, 28, 22)
 NAVY = (18, 38, 62)
-NAVY_DK = (11, 26, 46)
+NAVY_DK = (7, 18, 36)
 GOLD = (198, 154, 52)
 GREEN = (46, 139, 87)
 TEAL = (14, 124, 123)
@@ -190,6 +190,18 @@ def sc_nvidia(d, x, y, w, h):
               fill=(80, 220, 130))
     d.rectangle([x, y + h - 16, x + w, y + h], fill=(20, 34, 56))
     d.line([(x, y + h - 16), (x + w, y + h - 16)], fill=(90, 120, 160), width=1)
+    # ticker tape + skyline + extra traders fill the lower half
+    d.rectangle([x, y + h - 26, x + w, y + h - 16], fill=(12, 24, 44))
+    d.text((x + 5, y + h - 25), "NVDA +33%   TSLA +4%   AAPL +2%   MSFT +1%   AMZN +3%",
+           font=F(DSB, 8), fill=(120, 220, 140))
+    for bx, bw, bh in [(0.60, 0.07, 20), (0.68, 0.05, 30), (0.75, 0.08, 22)]:
+        d.rectangle([x + w * bx, y + h - 26 - bh, x + w * (bx + bw), y + h - 26],
+                    fill=(24, 40, 64))
+        for wy in range(2):
+            d.rectangle([x + w * bx + 3, y + h - 26 - bh + 4 + wy * 10,
+                         x + w * bx + 7, y + h - 26 - bh + 8 + wy * 10], fill=(255, 214, 130))
+    person(d, x + w * 0.18, y + h - 44, 36, (90, 60, 50), arm="one")
+    person(d, x + w * 0.86, y + h - 44, 36, (50, 80, 60), arm="up")
     # figure from behind, leather jacket, facing the board
     cx = x + w * 0.5
     person(d, cx, y + h - 52, 44, (30, 30, 34), skin=(170, 140, 110))
@@ -209,9 +221,9 @@ def sc_merkury(d, x, y, w, h):
     # flame on the hull
     d.polygon([(x + w * 0.46, y + h * 0.52), (x + w * 0.50, y + h * 0.40),
                (x + w * 0.54, y + h * 0.52)], fill=(255, 200, 60))
-    # smoke columns rising from the hull
-    for sx, sh in [(0.34, 20), (0.48, 26), (0.60, 18)]:
-        d.ellipse([x + w * sx, y + h * 0.40 - sh, x + w * sx + 12, y + h * 0.40],
+    # smoke columns rising from the hull, bases touching the hull edge
+    for sx, sb, sh in [(0.33, 0.55, 20), (0.47, 0.44, 26), (0.57, 0.58, 18)]:
+        d.ellipse([x + w * sx, y + h * sb - sh, x + w * sx + 14, y + h * sb],
                   fill=(120, 118, 112))
     # sea: dark band + wave lines + small drone boat
     d.rectangle([x, y + h * 0.72, x + w, y + h], fill=(14, 32, 58))
@@ -256,11 +268,14 @@ def sc_awacs(d, x, y, w, h):
     px, py, s = x + w * 0.10, y + h * 0.42, w * 0.72
     d.polygon([(px + s * 0.96, py + s * 0.10), (px + s * 1.08, py + s * 0.02),
                (px + s * 1.04, py + s * 0.16)], fill=(210, 214, 218))
-    d.ellipse([px, py, px + s, py + s * 0.20], fill=(240, 240, 238))
+    d.ellipse([px, py + s * 0.02, px + s, py + s * 0.18], fill=(240, 240, 238))
+    d.line([(px + s * 0.05, py + s * 0.15), (px + s * 0.92, py + s * 0.15)],
+           fill=(150, 158, 165), width=2)
+    d.rectangle([px + s * 0.86, py + s * 0.04, px + s * 0.93, py + s * 0.09],
+                fill=(30, 60, 110))
     d.polygon([(px + s * 0.02, py + s * 0.08), (px + s * 0.10, py - s * 0.14),
                (px + s * 0.16, py + s * 0.08)], fill=(215, 219, 224))
-    d.polygon([(px + s * 0.50, py + s * 0.18), (px + s * 0.72, py + s * 0.42),
-               (px + s * 0.58, py + s * 0.18)], fill=(205, 210, 215))
+    # wing + stabiliser drawn after the land block (below), so they stay visible
     d.line([(px + s * 0.30, py - s * 0.06), (px + s * 0.30, py + s * 0.02)], fill=(160, 165, 170),
            width=2)
     d.ellipse([px + s * 0.22, py - s * 0.16, px + s * 0.44, py + s * 0.02],
@@ -272,6 +287,11 @@ def sc_awacs(d, x, y, w, h):
     d.rectangle([x, y + h * 0.78, x + w, y + h], fill=(120, 160, 110))
     d.polygon([(x + w * 0.20, y + h * 0.78), (x + w * 0.45, y + h * 0.72), (x + w * 0.70, y + h * 0.78),
                (x + w * 0.62, y + h), (x + w * 0.30, y + h)], fill=(150, 185, 130))
+    # main wing + tail stabiliser over the land: swept, clearly a plane not a blimp
+    d.polygon([(px + s * 0.42, py + s * 0.16), (px + s * 0.80, py + s * 0.30),
+               (px + s * 0.64, py + s * 0.16)], fill=(205, 210, 215))
+    d.polygon([(px + s * 0.03, py + s * 0.14), (px + s * 0.14, py + s * 0.27),
+               (px + s * 0.09, py + s * 0.14)], fill=(205, 210, 215))
     d.ellipse([x + w * 0.44, y + h * 0.80, x + w * 0.50, y + h * 0.86], fill=RED)
     d.line([(x + w * 0.47, y + h * 0.83), (x + w * 0.47, y + h * 0.70)], fill=RED, width=2)
 
@@ -585,12 +605,19 @@ def sc_dymer(d, x, y, w, h):
               fill=(118, 102, 86))
     d.polygon([(x + w * 0.58, y + h * 0.70), (x + w * 0.70, y + h * 0.60), (x + w * 0.78, y + h * 0.72)],
               fill=(112, 98, 82))
+    # extra broken slabs in the foreground rubble
+    d.polygon([(x + w * 0.02, y + h * 0.86), (x + w * 0.15, y + h * 0.80), (x + w * 0.17, y + h * 0.92),
+               (x + w * 0.04, y + h * 0.96)], fill=(118, 102, 86))
+    d.polygon([(x + w * 0.86, y + h * 0.84), (x + w * 0.98, y + h * 0.80), (x + w * 0.98, y + h * 0.94),
+               (x + w * 0.88, y + h * 0.96)], fill=(112, 98, 82))
+    for dx, dy in [(0.45, 0.66), (0.52, 0.68), (0.60, 0.65)]:
+        d.rectangle([x + w * dx, y + h * dy, x + w * dx + 6, y + h * dy + 4], fill=(100, 86, 72))
     # rescuers close to the stretcher + boy wrapped in a blue blanket
     person(d, x + w * 0.22, y + h * 0.52, 32, (230, 120, 40), arm="one")
     person(d, x + w * 0.76, y + h * 0.52, 32, (230, 120, 40), arm="one")
-    d.rectangle([x + w * 0.30, y + h * 0.74, x + w * 0.70, y + h * 0.80], fill=(240, 240, 235))
-    d.ellipse([x + w * 0.32, y + h * 0.70, x + w * 0.38, y + h * 0.76], fill=(216, 178, 140))
-    d.rectangle([x + w * 0.38, y + h * 0.72, x + w * 0.68, y + h * 0.78], fill=(40, 90, 160))
+    d.rectangle([x + w * 0.28, y + h * 0.73, x + w * 0.72, y + h * 0.81], fill=(240, 240, 235))
+    d.ellipse([x + w * 0.30, y + h * 0.69, x + w * 0.37, y + h * 0.76], fill=(216, 178, 140))
+    d.rectangle([x + w * 0.36, y + h * 0.71, x + w * 0.70, y + h * 0.79], fill=(40, 90, 160))
 
 # ---------- card renderers ----------
 def lead_card(d, x, y, w, h, num, tag, scene, loc, head, body):
@@ -735,7 +762,7 @@ def proj(lon, lat):
     py = my0 + (85 - lat) / 145 * (my1 - my0)
     return px, py
 for poly in CONTINENTS:
-    d.polygon([proj(lon, lat) for lon, lat in poly], fill=(217, 201, 163))
+    d.polygon([proj(lon, lat) for lon, lat in poly], fill=(228, 214, 178))
 PINS = [
     (1, -74, 40.7, -10, -4, None, None), (2, 20.1, 32.1, 0, 0, "Benghazi", (-46, -4)),
     (3, 30.7, 36.9, 6, 6, "Antalya", (-42, 9)), (4, 21, 52.2, -8, -8, None, None),
@@ -799,14 +826,14 @@ for ci, col in enumerate(cols):
         cy += 2.5
 
 # ---------- DATE CHECK ----------
-d.rectangle([8, 940, W - 8, 986], outline=RED, width=2)
+d.rectangle([8, 938, W - 8, 988], outline=RED, width=2)
 dc = ("DATE CHECK — ALL 40 STORIES ARE FROM MONDAY 23 NOVEMBER 2026. Sunday events "
-      "flagged SUN — their Monday tolls, confirmations and outcomes are the 23 November news. "
+      "flagged SUN — their Monday tolls and outcomes are the news. "
       "Nvidia's resignation (12 Nov) is NOT the story — its Monday reinstatement is Lead 1. "
-      "Excluded: COP31 'nears deal' (false since Sunday), Kryvyi Rih (20 Nov), Kerch Bridge (16–17 Nov).")
+      "Excluded: COP31 'nears deal' (false), Kryvyi Rih (20 Nov), Kerch Bridge (16–17 Nov).")
 fdc = F(DJ, 11)
 dcl = wrap(dc, fdc, W - 32)
-draw_lines(d, dcl, 14, 944, fdc, INK, 14)
+draw_lines(d, dcl, 14, 943, fdc, INK, 15)
 
 # ---------- footer ----------
 foot = ("Sources: Reuters, BBC, AP, AFP, Guardian, USGS, FIFA, MENAFN, PIB  ·  "
