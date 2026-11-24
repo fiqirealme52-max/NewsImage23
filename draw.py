@@ -1,13 +1,20 @@
-# draw.py — News 23 round 3 revision (news-image-20261123)
+# draw.py — News 23 round 4 revision (news-image-20261123)
 # Fresh build, 24 Nov 2026. 40 stories: 3 leads + 15 mediums + 22 briefs.
-# All new Monday numbers verified to sources before drawing:
-#   Nvidia +33% (Reuters, Nasdaq +6%, S&P +4%) / Kospi close -3.31% at 4,708.54,
-#   intraday -5.8% (Korea Exchange) / Belgium: all flights 07:00-21:00 cancelled,
-#   429 scheduled, 59,500 passengers (Brussels Airport) / NATO AWACS authorised
-#   by SACEUR, no Article 4 (NATO) / Nepal NPR 24,000 cr package (PIB) /
-#   Brent -3.46% to $89.37 (Morningstar) / Taiex +2.16% to 36,811.89 /
-#   India-NZ 1st Test drawn (Cricinfo) / Trump orders Iowa blast paused (Reuters) /
-#   Gaza strikes kill 4 on Sat 22 Nov (MENAFN).
+# R4 fixes the 6 hard fails + 7 soft fails of the R3 audit. All numbers below were
+# verified to live sources by the builder on 24 Nov 2026 before drawing:
+#   NVDA close +31.48% at $165.05 (+~$950bn, best day since 2003); TSLA +11.46%,
+#   META +6.55%, GOOGL +6.34%, AMZN +3.47%, AAPL +1.90%, MSFT +1.65%;
+#   Nasdaq +6.51%, S&P +4.73%, Dow +3.01% (Finnhub/Motley Fool) /
+#   Belgium: 404 of 429 flights cancelled (Brussels Airport) /
+#   Dymer 11 dead, 2 missing; Vyshneve 3 killed, 15 hurt (BBC/AFP, Mayor Dikov) /
+#   Taiex close 36,811.89 +2.16%, TSMC +1.5% (TVBS) / Ebola: WHO warning Mon 23 Nov,
+#   cases doubled in 3 months (UN News) / Nepal INR 15,000 cr = NPR 24,000 cr (PIB) /
+#   Selangor 1,582 evacuees 06:00 Mon (ADINet) / COP31: 2 days over, $120bn goal lost,
+#   EU + ~130 nations refused a text with no fossil-fuel mention (magnabureau/BBC) /
+#   FIFA congress Mon 23 Nov: 2031 + 2035 Women's World Cups, 48 teams, 104 matches /
+#   Indonesia factory fire: 24 dead (Reuters) / Nigeria power-debt payoff by 2027 (ARISE) /
+#   Anthropic close $87.64, -1.43% (Finnhub) / Brent -3.5% to $89.37 (Reuters).
+# Full verification log: ~/workspace/makefun/News23/r4-verification-log-2026-11-24.md
 # PIL programmatic flat illustration, one style, serif broadsheet, cream paper.
 # Deterministic: no randomness.
 from PIL import Image, ImageDraw, ImageFont
@@ -134,18 +141,18 @@ f_kick = F(DSB, 15)
 f_mast = F(DJB, 56)
 f_sub = F(NTI, 17)
 d.text((8, 6), "THE WORLD IN ONE DAY", font=f_kick, fill=RED)
-r = "40 STORIES · 6 REGIONS · EVERY ONE DATED MONDAY 23 NOVEMBER 2026"
+r = "40 STORIES · 6 REGIONS · MONDAY 23 NOVEMBER 2026"
 d.text((W - 8 - F(DSB, 11).getlength(r), 9), r, font=F(DSB, 11), fill=SOFT)
 d.line([(8, 26), (W - 8, 26)], fill=(190, 175, 150), width=1)
 d.text(((W - F(DJB, 56).getlength("Monday 23 November 2026")) / 2, 28),
        "Monday 23 November 2026", font=f_mast, fill=INK)
 d.line([(8, 92), (W - 8, 92)], fill=INK, width=2)
-sub = "Nvidia brings Huang back as shares soar 33%  ·  Russian warship sunk off Benghazi  ·  COP31 collapses with no deal"
+sub = "Nvidia brings Huang back as shares soar 31%  ·  Russian warship sunk off Benghazi  ·  COP31 collapses with no deal"
 d.text(((W - F(NTI, 17).getlength(sub)) / 2, 96), sub, font=f_sub, fill=RED)
 
 # ---------- number strip ----------
-nums = [("40", "STORIES"), ("6", "REGIONS"), ("+33%", "NVIDIA, MON"),
-        ("429", "FLIGHTS GROUNDED"), ("+2.16%", "TAIEX, MON"),
+nums = [("40", "STORIES"), ("6", "REGIONS"), ("+31%", "NVIDIA, MON"),
+        ("404", "FLIGHTS CANCELLED"), ("+2.16%", "TAIEX, MON"),
         ("104", "MATCHES, 2035 WORLD CUP")]
 y0, y1 = 118, 162
 d.rectangle([8, y0, W - 8, y1], outline=(190, 175, 150), width=1)
@@ -160,8 +167,8 @@ for i, (n, lab) in enumerate(nums):
         d.line([(x, y0 + 4), (x, y1 - 4)], fill=(205, 190, 165), width=1)
 
 # ---------- region strip (6 real regions, sums to 40) ----------
-regs = [("EUROPE 16", BLUE), ("ASIA 10", ORANGE), ("N. AMERICA 7", TEAL),
-        ("MIDDLE EAST 4", RED), ("OCEANIA 2", PURPLE), ("AFRICA 1", GREEN2)]
+regs = [("EUROPE 17", BLUE), ("ASIA 7", ORANGE), ("N. AMERICA 9", TEAL),
+        ("MIDDLE EAST 2", RED), ("OCEANIA 2", PURPLE), ("AFRICA 3", GREEN2)]
 y0, y1 = 166, 188
 x = 8
 for lab, col in regs:
@@ -176,8 +183,8 @@ def sc_nvidia(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (16, 30, 58), (34, 62, 96))
     stars(d, (x, y, x + w, y + h * 0.4), 14, 3)
     d.rectangle([x, y, x + w, y + 16], fill=(10, 20, 40))
-    d.text((x + 5, y + 2), "NVDA  +33%", font=F(DSB, 11), fill=(120, 220, 140))
-    _nas = "NASDAQ +6%"
+    d.text((x + 5, y + 2), "NVDA  +31.5%", font=F(DSB, 11), fill=(120, 220, 140))
+    _nas = "NASDAQ +6.5%"
     d.text((x + w - 9 - F(DSB, 10).getlength(_nas), y + 2), _nas, font=F(DSB, 10),
            fill=(200, 210, 225))
     for gy in range(1, 4):
@@ -191,7 +198,7 @@ def sc_nvidia(d, x, y, w, h):
     # clean ticker tape strip at the very bottom: figures stand ABOVE it, never on the text
     d.rectangle([x, y + h - 16, x + w, y + h], fill=(12, 24, 44))
     d.line([(x, y + h - 16), (x + w, y + h - 16)], fill=(90, 120, 160), width=1)
-    d.text((x + 5, y + h - 14), "NVDA +33%   TSLA +4%   AAPL +2%   MSFT +1%   AMZN +3%",
+    d.text((x + 5, y + h - 14), "NVDA +31.5%  TSLA +11.5%  META +6.6%  GOOGL +6.3%  AMZN +3.5%",
            font=F(DSB, 8), fill=(120, 220, 140))
     # skyline sits above the tape strip, bottom edge on the tape line
     for bx, bw, bh in [(0.60, 0.07, 20), (0.68, 0.05, 30), (0.75, 0.08, 22)]:
@@ -226,12 +233,20 @@ def sc_merkury(d, x, y, w, h):
     for sx, sb, sh in [(0.33, 0.55, 20), (0.47, 0.44, 26), (0.57, 0.58, 18)]:
         d.ellipse([x + w * sx, y + h * sb - sh, x + w * sx + 14, y + h * sb],
                   fill=(120, 118, 112))
+    # second smoke layer, higher and lighter
+    for sx, sb, sh in [(0.36, 0.50, 22), (0.50, 0.40, 24)]:
+        d.ellipse([x + w * sx, y + h * sb - sh, x + w * sx + 12, y + h * sb],
+                  fill=(150, 148, 142))
     # sea: dark band + wave lines + small drone boat
     d.rectangle([x, y + h * 0.72, x + w, y + h], fill=(14, 32, 58))
     for wy in (0.78, 0.86, 0.94):
         d.line([(x + 6, y + h * wy), (x + w - 6, y + h * wy)], fill=(70, 110, 150), width=1)
     d.polygon([(x + w * 0.72, y + h * 0.80), (x + w * 0.82, y + h * 0.80),
                (x + w * 0.78, y + h * 0.86)], fill=(60, 66, 78))
+    # fire reflection streaks on the water, under the glow
+    for rx, rw, ry in [(0.36, 0.26, 0.78), (0.40, 0.18, 0.84), (0.44, 0.12, 0.90)]:
+        d.line([(x + w * rx, y + h * ry), (x + w * (rx + rw), y + h * ry)],
+               fill=(230, 130, 50), width=2)
 
 def sc_cop31(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (88, 66, 48), (150, 118, 76))
@@ -242,17 +257,23 @@ def sc_cop31(d, x, y, w, h):
         d.line([(wx + (w - 12) / 8 - 3, y + 6), (wx + (w - 12) / 8 - 3, y + h * 0.42)],
                fill=(120, 92, 60), width=2)
     d.rectangle([x, y + h * 0.44, x + w, y + h * 0.52], fill=(70, 50, 36))
-    # clock "49 HRS OVER"
+    # clock "2 DAYS OVER"
     d.ellipse([x + w * 0.43, y + 2, x + w * 0.57, y + 26], fill=(245, 240, 225),
               outline=INK, width=2)
     d.line([(x + w * 0.5, y + 14), (x + w * 0.5, y + 6)], fill=INK, width=2)
     d.line([(x + w * 0.5, y + 14), (x + w * 0.55, y + 17)], fill=INK, width=2)
+    d.text((x + w * 0.5 - F(DSB, 9).getlength("2 DAYS OVER") / 2, y + 28),
+           "2 DAYS OVER", font=F(DSB, 9), fill=RED_DK)
     # table + gavel + red-X document
     d.rectangle([x + w * 0.08, y + h * 0.56, x + w * 0.92, y + h * 0.68], fill=(96, 62, 40))
     d.rectangle([x + w * 0.30, y + h * 0.56, x + w * 0.48, y + h * 0.65], fill=(245, 240, 225))
     d.line([(x + w * 0.33, y + h * 0.58), (x + w * 0.45, y + h * 0.63)], fill=RED, width=2)
     d.line([(x + w * 0.45, y + h * 0.58), (x + w * 0.33, y + h * 0.63)], fill=RED, width=2)
-    d.rectangle([x + w * 0.60, y + h * 0.58, x + w * 0.72, y + h * 0.62], fill=(160, 120, 70))
+    # gavel: head + diagonal handle + sound block
+    d.rectangle([x + w * 0.60, y + h * 0.56, x + w * 0.70, y + h * 0.61], fill=(160, 120, 70))
+    d.line([(x + w * 0.68, y + h * 0.60), (x + w * 0.78, y + h * 0.68)], fill=(120, 85, 50),
+           width=3)
+    d.rectangle([x + w * 0.76, y + h * 0.66, x + w * 0.84, y + h * 0.69], fill=(160, 120, 70))
     # delegates walking out, foreground
     person(d, x + w * 0.18, y + h * 0.62, 34, (60, 70, 90))
     person(d, x + w * 0.42, y + h * 0.62, 36, (120, 60, 50), arm="one")
@@ -434,26 +455,27 @@ def sc_lac(d, x, y, w, h):
     person(d, x + w * 0.64, y + h * 0.38, 30, (90, 60, 50), arm="one")
     d.rectangle([x, y + h * 0.82, x + w, y + h], fill=(150, 170, 120))
 
-def sc_himalaya(d, x, y, w, h):
-    vgrad(d, (x, y, x + w, y + h), (150, 170, 190), (200, 195, 175))
-    d.polygon([(x, y + h * 0.55), (x + w * 0.30, y + h * 0.14), (x + w * 0.58, y + h * 0.55)],
-              fill=(100, 115, 135))
-    d.polygon([(x + w * 0.50, y + h * 0.55), (x + w * 0.78, y + h * 0.20), (x + w, y + h * 0.55)],
-              fill=(120, 133, 150))
-    d.polygon([(x + w * 0.24, y + h * 0.26), (x + w * 0.30, y + h * 0.14), (x + w * 0.36, y + h * 0.26)],
-              fill=(255, 255, 255))
-    # muddy flood water + tilted house + truck
-    d.polygon([(x, y + h * 0.60), (x + w, y + h * 0.66), (x + w, y + h), (x, y + h)],
-              fill=(140, 110, 70))
-    d.polygon([(x + w * 0.12, y + h * 0.52), (x + w * 0.30, y + h * 0.52), (x + w * 0.34, y + h * 0.66),
-               (x + w * 0.08, y + h * 0.66)], fill=(180, 90, 60))
-    d.polygon([(x + w * 0.10, y + h * 0.52), (x + w * 0.32, y + h * 0.52), (x + w * 0.21, y + h * 0.44)],
-              fill=(120, 60, 40))
-    d.rectangle([x + w * 0.58, y + h * 0.70, x + w * 0.90, y + h * 0.84], fill=(200, 60, 40))
-    d.rectangle([x + w * 0.58, y + h * 0.62, x + w * 0.72, y + h * 0.72], fill=(160, 50, 35))
-    d.ellipse([x + w * 0.62, y + h * 0.82, x + w * 0.68, y + h * 0.88], fill=INK)
-    d.ellipse([x + w * 0.80, y + h * 0.82, x + w * 0.86, y + h * 0.88], fill=INK)
-    person(d, x + w * 0.44, y + h * 0.50, 24, (40, 60, 120), arm="up")
+def sc_taiex(d, x, y, w, h):
+    vgrad(d, (x, y, x + w, y + h), (16, 34, 58), (38, 68, 96))
+    stars(d, (x, y, x + w, y + h * 0.4), 8, 11)
+    # Taipei 101: tapered tower, narrow at the top, right side
+    tx = x + w * 0.72
+    for i in range(5):
+        ww = 14 + i * 3
+        d.rectangle([tx - ww / 2, y + h * (0.18 + i * 0.11), tx + ww / 2,
+                     y + h * (0.29 + i * 0.11)], fill=(52, 62, 80))
+    d.line([(tx, y + h * 0.18), (tx, y + h * 0.06)], fill=(150, 165, 185), width=2)
+    d.ellipse([tx - 3, y + h * 0.04, tx + 3, y + h * 0.10], fill=(255, 214, 130))
+    for wy in (0.30, 0.42, 0.54, 0.66):
+        d.rectangle([tx - 5, y + h * wy, tx + 5, y + h * wy + 3], fill=(255, 214, 130))
+    # rising green chart with arrowhead
+    pts = [(x + 6, y + h * 0.72), (x + w * 0.25, y + h * 0.62), (x + w * 0.42, y + h * 0.66),
+           (x + w * 0.58, y + h * 0.44), (x + w * 0.68, y + h * 0.34)]
+    chart(d, pts, (80, 220, 130), 3)
+    d.polygon([(x + w * 0.68, y + h * 0.34), (x + w * 0.68 - 10, y + h * 0.34 + 4),
+               (x + w * 0.68 - 2, y + h * 0.34 + 12)], fill=(80, 220, 130))
+    d.text((x + 5, y + 4), "+2.16%", font=F(DSB, 10), fill=(120, 220, 140))
+    d.rectangle([x, y + h * 0.86, x + w, y + h], fill=(12, 24, 44))
 
 def sc_nhs(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (190, 215, 230), (245, 242, 235))
@@ -527,26 +549,24 @@ def sc_selangor(d, x, y, w, h):
     for wy in (0.88, 0.94):
         d.line([(x + 6, y + h * wy), (x + w - 6, y + h * wy)], fill=(150, 190, 210), width=1)
 
-def sc_typhoid(d, x, y, w, h):
-    vgrad(d, (x, y, x + w, y + h), (200, 225, 235), (245, 240, 225))
-    # clinic
-    d.rectangle([x + w * 0.06, y + h * 0.26, x + w * 0.46, y + h * 0.72], fill=(250, 250, 248))
-    d.rectangle([x + w * 0.06, y + h * 0.26, x + w * 0.46, y + h * 0.34], fill=(0, 120, 120))
-    d.rectangle([x + w * 0.24, y + h * 0.12, x + w * 0.30, y + h * 0.26], fill=(255, 255, 255))
-    d.rectangle([x + w * 0.21, y + h * 0.17, x + w * 0.33, y + h * 0.23], fill=(255, 255, 255))
+def sc_ebola(d, x, y, w, h):
+    vgrad(d, (x, y, x + w, y + h), (200, 222, 232), (245, 240, 225))
+    # clinic block with cross
+    d.rectangle([x + w * 0.06, y + h * 0.30, x + w * 0.44, y + h * 0.74], fill=(250, 250, 248))
+    d.rectangle([x + w * 0.06, y + h * 0.30, x + w * 0.44, y + h * 0.38], fill=(0, 120, 120))
+    d.rectangle([x + w * 0.22, y + h * 0.14, x + w * 0.28, y + h * 0.30], fill=(255, 255, 255))
+    d.rectangle([x + w * 0.19, y + h * 0.19, x + w * 0.31, y + h * 0.25], fill=(255, 255, 255))
     for c in range(3):
-        d.rectangle([x + w * (0.11 + c * 0.12), y + h * 0.42, x + w * (0.18 + c * 0.12),
-                     y + h * 0.52], fill=(140, 190, 210))
-    # vaccine vial + syringe, big
-    d.rectangle([x + w * 0.58, y + h * 0.18, x + w * 0.74, y + h * 0.52], fill=(200, 230, 240))
-    d.rectangle([x + w * 0.60, y + h * 0.14, x + w * 0.72, y + h * 0.18], fill=(120, 140, 160))
-    d.rectangle([x + w * 0.62, y + h * 0.34, x + w * 0.70, y + h * 0.48], fill=(90, 160, 220))
-    d.line([(x + w * 0.80, y + h * 0.30), (x + w * 0.94, y + h * 0.16)], fill=(180, 180, 180), width=3)
-    d.rectangle([x + w * 0.78, y + h * 0.32, x + w * 0.86, y + h * 0.40], fill=(200, 200, 200))
-    # queue of children
-    person(d, x + w * 0.55, y + h * 0.44, 28, (220, 100, 90))
-    person(d, x + w * 0.68, y + h * 0.44, 26, (90, 140, 200))
-    person(d, x + w * 0.81, y + h * 0.44, 28, (90, 180, 120))
+        d.rectangle([x + w * (0.10 + c * 0.11), y + h * 0.44, x + w * (0.17 + c * 0.11),
+                     y + h * 0.54], fill=(140, 190, 210))
+    # warning triangle
+    cx, cy = x + w * 0.70, y + h * 0.42
+    d.polygon([(cx, cy - 20), (cx + 20, cy + 14), (cx - 20, cy + 14)], fill=(250, 200, 40),
+              outline=INK)
+    d.text((cx - 3, cy - 8), "!", font=F(DSB, 16), fill=INK)
+    # two responders at the clinic door
+    person(d, x + w * 0.56, y + h * 0.52, 24, (40, 90, 160), arm="one")
+    person(d, x + w * 0.88, y + h * 0.52, 24, (40, 90, 160), arm="one")
     d.rectangle([x, y + h * 0.84, x + w, y + h], fill=(170, 200, 160))
 
 def sc_kospi(d, x, y, w, h):
@@ -628,12 +648,14 @@ def sc_dymer(d, x, y, w, h):
     d.rectangle([x + w * 0.36, y + h * 0.71, x + w * 0.70, y + h * 0.79], fill=(40, 90, 160))
 
 # ---------- card renderers ----------
-def lead_card(d, x, y, w, h, num, tag, scene, loc, head, body):
+def lead_card(d, x, y, w, h, num, tag, scene, loc, head, body, chip="✓"):
     d.rectangle([x, y, x + w, y + h], fill=(255, 255, 255), outline=(200, 185, 160))
     d.rectangle([x, y, x + w, y + 16], fill=RED)
     d.text((x + 6, y + 2), "%d · LEAD" % num, font=F(DSB, 10), fill=(255, 255, 255))
-    d.text((x + w - 6 - F(DSB, 10).getlength(tag), y + 2), tag, font=F(DSB, 10),
-           fill=(255, 255, 255))
+    _tw = F(DSB, 10).getlength(tag)
+    d.text((x + w - 6 - _tw, y + 2), tag, font=F(DSB, 10), fill=(255, 255, 255))
+    _cw = F(DSB, 10).getlength(chip)
+    d.text((x + w - 6 - _tw - 5 - _cw, y + 2), chip, font=F(DSB, 10), fill=(255, 255, 255))
     sy = y + 16
     scene(d, x + 1, sy, w - 2, 104)
     ty = sy + 104
@@ -645,13 +667,16 @@ def lead_card(d, x, y, w, h, num, tag, scene, loc, head, body):
     bl = wrap(body, fb, w - 12)
     draw_lines(d, bl[:2], x + 6, ty + 13 + len(hl[:2]) * 20 + 2, fb, SOFT, 14)
 
-def med_card(d, x, y, w, h, num, tag, scene, loc, head, body, hero=False, blines=1, sh=52):
+def med_card(d, x, y, w, h, num, tag, scene, loc, head, body, hero=False, blines=1, sh=52,
+             chip="✓"):
     d.rectangle([x, y, x + w, y + h], fill=(255, 255, 255), outline=(200, 185, 160))
     d.rectangle([x, y, x + w, y + 14], fill=RED)
     d.text((x + 5, y + 2), "%d · HERO" % num if hero else "%d" % num, font=F(DSB, 10),
            fill=(255, 255, 255))
-    d.text((x + w - 5 - F(DSB, 9).getlength(tag), y + 2), tag, font=F(DSB, 9),
-           fill=(255, 255, 255))
+    _tw = F(DSB, 9).getlength(tag)
+    d.text((x + w - 5 - _tw, y + 2), tag, font=F(DSB, 9), fill=(255, 255, 255))
+    _cw = F(DSB, 9).getlength(chip)
+    d.text((x + w - 5 - _tw - 4 - _cw, y + 2), chip, font=F(DSB, 9), fill=(255, 255, 255))
     sy = y + 14
     scene(d, x + 1, sy, w - 2, sh)
     ty = sy + sh
@@ -667,24 +692,24 @@ def med_card(d, x, y, w, h, num, tag, scene, loc, head, body, hero=False, blines
 # ---------- pictured stories ----------
 LEADS = [
     (1, "MON", sc_nvidia, "NEW YORK · MARKETS · MON",
-     "Nvidia brings Huang back — shares soar 33%",
-     "Board votes unanimously, 11 days after his resignation; Nasdaq +6%, S&P +4%. (Reuters, WSJ)"),
+     "Nvidia brings Huang back — shares soar 31%",
+     "Board votes unanimously, 11 days after resignation; NVDA +31.5%, TSLA +11.5%, +$950bn. (Reuters)"),
     (2, "SUN", sc_merkury, "BENGHAZI · LIBYA · SUN",
      "Russian warship sunk by sea drones in Libyan port",
-     "Capsized, bow up; 10 hurt, 4 drones downed; Sparta II towed out. Suspected Ukrainian drones. (AP, Reuters)"),
+     "Capsized, bow up; 10 hurt, 4 drones downed — Sparta II towed out. Suspected Ukrainian drones. (AP, Reuters)"),
     (3, "SUN", sc_cop31, "ANTALYA · CLIMATE · SUN",
      "COP31 collapses — no deal on fossil fuels",
-     "Longest COP ever, 49 hrs over; $120bn goal lost; five blocs said no. (BBC, Reuters)"),
+     "Longest COP ever, 2 days over; $120bn goal lost; EU + 130 nations said no. (BBC, Reuters)"),
 ]
 MEDS = [
     (18, "SUN", sc_dymer, "DYMER · UKRAINE · SUN", True,
      "Boy, 7, pulled alive after 14 hours under rubble",
-     "9 dead, 11 missing; Vyshneve: 3 killed, 13 hurt. (BBC, AFP)"),
+     "11 dead, 2 missing; Vyshneve: 3 killed, 15 hurt. (BBC, AFP)"),
     (4, "MON", sc_awacs, "NATO · POLAND · MON", False,
      "NATO sends AWACS to Poland",
      "SACEUR authorises jet; Article 4 not invoked. (NATO)"),
     (5, "MON", sc_nepal, "NEW DELHI · NEPAL · MON", False,
-     "Modi gives Nepal ₹24,000 crore",
+     "Modi gives Nepal ₹15,000 crore",
      "NPR 5,600 cr grant + 18,400 cr credit; rail flagged off. (PIB)"),
     (6, "SUN", sc_houthis, "RABIGH · SAUDI · SUN", False,
      "Houthis claim refinery hit",
@@ -692,18 +717,18 @@ MEDS = [
     (7, "MON", sc_vanuatu, "VANUATU · PACIFIC · MON", False,
      "Deep quake shakes Vanuatu",
      "M6.5 at 601 km, no tsunami. (USGS)"),
-    (8, "SUN", sc_fifa, "ZURICH · SPORT · SUN", False,
+    (8, "MON", sc_fifa, "ZURICH · SPORT · MON", False,
      "UK to host 2035 Women's World Cup",
-     "48 teams, 104 matches. (BBC, Reuters)"),
+     "48 teams, 104 matches. (BBC)"),
     (9, "SUN", sc_house, "WASHINGTON · POLITICS · SUN", False,
      "Democrats' biggest House majority",
      "Largest since 1992. (BBC)"),
     (10, "MON", sc_lac, "ARUNACHAL · INDIA-CHINA · MON", False,
      "India, China open border talks",
      "10-day talks on LAC. (Hindu)"),
-    (11, "MON", sc_himalaya, "HIMALAYAS · FLOOD · MON", False,
-     "Himalayan flood kills 4",
-     "100 missing in valley. (Access24)"),
+    (11, "MON", sc_taiex, "TAIPEI · MARKETS · MON", False,
+     "Taiex rebounds 2.16% after rout",
+     "Close 36,811.89 (TVBS)"),
     (12, "MON", sc_nhs, "LONDON · HEALTH · MON", False,
      "NHS launches biggest AI trial",
      "AI spots cancer earlier. (BBC)"),
@@ -711,11 +736,11 @@ MEDS = [
      "Alcaraz wins ATP Finals in Turin",
      "Márquez 8th title too. (BBC)"),
     (14, "MON", sc_selangor, "SELANGOR · MALAYSIA · MON", False,
-     "Selangor floods displace 1,800",
-     "Evacuees past 1,800. (Bernama)"),
-    (15, "MON", sc_typhoid, "DHAKA · HEALTH · MON", False,
-     "Typhoid drive for 50m children",
-     "Month-long, nationwide. (AP)"),
+     "Selangor floods displace 1,582",
+     "1,582 at 06:00, falling. (ADINet)"),
+    (15, "MON", sc_ebola, "BUNIA · DR CONGO · MON", False,
+     "Ebola teams trapped as fighting rages",
+     "Doubled in 3 months. (UN News)"),
     (16, "MON", sc_kospi, "SEOUL · MARKETS · MON", False,
      "Kospi plunges 5.8% intraday",
      "Close −3.31% at 4,708. (KRX)"),
@@ -727,7 +752,8 @@ MEDS = [
 # ---------- leads row ----------
 lw = (W - 16 - 14) / 3
 for i, (num, tag, scene, loc, head, body) in enumerate(LEADS):
-    lead_card(d, 8 + i * (lw + 7), 192, lw, 204, num, tag, scene, loc, head, body)
+    lead_card(d, 8 + i * (lw + 7), 192, lw, 204, num, tag, scene, loc, head, body,
+              chip="?" if num == 2 else "✓")
 
 # ---------- medium rows: A (hero row, 147px) / B / C (116px) ----------
 mw = (W - 16 - 24) / 5
@@ -735,7 +761,7 @@ rows = [(400, 158, MEDS[0:5], 76, 2), (562, 118, MEDS[5:10], 52, 1), (684, 118, 
 for ry, rh, items, sh, bl in rows:
     for j, (num, tag, scene, loc, hero, head, body) in enumerate(items):
         med_card(d, 8 + j * (mw + 6), ry, mw, rh, num, tag, scene, loc, head, body,
-                 hero=hero, blines=bl, sh=sh)
+                 hero=hero, blines=bl, sh=sh, chip="?" if num == 6 else "✓")
 
 # ---------- map + ALSO ON ----------
 d.text((8, 806), "WHERE IT HAPPENED — PINS 1–18", font=F(DSB, 11), fill=INK)
@@ -777,9 +803,9 @@ PINS = [
     (5, 77.2, 28.6, -8, 4, None, None), (6, 39, 22.8, 8, 8, None, None),
     (7, 172.2, -13.7, 0, 0, None, None), (8, 8.5, 47.4, 0, -14, None, None),
     (9, -77, 38.9, -2, 8, None, None), (10, 94, 28, 8, -2, None, None),
-    (11, 84, 28.5, 0, -8, None, None), (12, -0.1, 51.5, -16, -10, None, None),
+    (11, 121.6, 25.0, -14, 10, None, None), (12, -0.1, 51.5, -16, -10, None, None),
     (13, 7.7, 45.1, 4, 8, None, None), (14, 101.5, 3.1, -6, 8, None, None),
-    (15, 90.4, 23.8, 10, 10, None, None), (16, 127, 37.5, 0, 0, "Seoul", (13, -4)),
+    (15, 30.2, 1.6, 0, 0, None, None), (16, 127, 37.5, 0, 0, "Seoul", (13, -4)),
     (17, 4.4, 50.8, -6, 10, "Brussels", (-58, -2)), (18, 30.3, 50.8, 12, -12, "Dymer", (14, -14)),
 ]
 for n, lon, lat, dx, dy, lab, loff in PINS:
@@ -802,28 +828,28 @@ BRIEFS = [
     "19 India-NZ 1st Test drawn (AP, MON)",
     "20 Sindarov gets White, G1 (FIDE, SUN)",
     "21 Taiwan bans short-selling (CNA, MON)",
-    "22 Youth Congress hits Meta (PTI, MON)",
-    "23 Paolo Bulgari dies, 89 (ANSA, MON)",
-    "24 Trump warns Iran (REUTERS, MON)",
-    "25 Tankers hit in Hormuz (UKMTO, SAT)",
+    "22 Anthropic −1.4%, $87.64 (FOOL, MON)",
+    "23 Bulgari funeral in Rome (ANSA, MON)",
+    "24 Trump warns Iran (FOX, SUN)",
+    "25 Nigeria debt payoff 2027 (ARISE, MON)",
     "26 Liverpool beat 10-man Utd (BBC, SUN)",
-    "27 Thitikul wins 3rd LPGA (AP, MON)",
-    "28 Slovakia nixes EU loan (REUTERS, SUN)",
-    "29 Syria arrests 2nd officer (SANA, MON)",
-    "30 Titanic ring sells £150k (BBC, MON)",
-    "31 Trump posts Putin, Xi photos (AP, SUN)",
-    "32 Trio blocks UN job bid (REUTERS, SUN)",
-    "33 Trump pauses Iowa blast (REUTERS, MON)",
-    "34 US varsity shooting; 2 dead (AP, SUN)",
-    "35 FSSAI: prosecute Bisleri (PTI, MON)",
-    "36 Trump reposts TrumpCare (AP, SUN)",
-    "37 90+ sign COP31 pledge (REUTERS)",
+    "27 Thitikul wins 3rd LPGA (AP, SUN)",
+    "28 Visegrád loan talks (REUTERS, MON)",
+    "29 Trump hush bid revived (AP, MON)",
+    "30 Monza 3-0 Fiorentina (LIVESCORE, MON)",
+    "31 Levante draw 1-1 with Elche (SKY, MON)",
+    "32 Lilly buys LoQus23, $725m (MON)",
+    "33 Iowa blast goes ahead Wed (WSJ, MON)",
+    "34 Commanders 22-20 Bengals (AP, MON)",
+    "35 Indonesia fire kills 24 (REUTERS, MON)",
+    "36 White House rejects TrumpCare (AP, MON)",
+    "37 90+ sign COP31 pledge (REUTERS, MON)",
     "38 Brent −3.5% to $89.37 (REUTERS, MON)",
-    "39 Gaza strikes kill 4 (MENAFN, SAT)",
+    "39 Brentford rout Everton 4-0 (SKY, MON)",
     "40 Centrica: bills may rise 26% (BBC, SUN)",
 ]
 cols = [BRIEFS[0:8], BRIEFS[8:15], BRIEFS[15:22]]
-fb = F(DJ, 8.5)
+fb = F(DJ, 8)
 for ci, col in enumerate(cols):
     cx = 428 + ci * 196
     cy = 824
@@ -836,10 +862,12 @@ for ci, col in enumerate(cols):
 
 # ---------- DATE CHECK ----------
 d.rectangle([8, 938, W - 8, 988], outline=RED, width=2)
-dc = ("DATE CHECK — ALL 40 STORIES ARE FROM MONDAY 23 NOVEMBER 2026. Sunday events "
-      "flagged SUN — their Monday tolls and outcomes are the news. "
-      "Nvidia's resignation (12 Nov) is NOT the story — its Monday reinstatement is Lead 1. "
-      "Excluded: COP31 'nears deal' (false), Kryvyi Rih (20 Nov), Kerch Bridge (16–17 Nov).")
+dc = ("DATE CHECK — This page covers Monday 23 November 2026. Sunday events "
+      "flagged SUN — only their Monday tolls and outcomes are the news. "
+      "Nvidia's 12 Nov resignation is NOT the story — its Monday return is Lead 1. "
+      "Excluded: COP31 'nears deal' (false), Kryvyi Rih (20 Nov), Kerch Bridge "
+      "(16–17 Nov), Tuesday's Kospi rebound (+7.2%), Hormuz tankers + Gaza strikes "
+      "(Sat 21 Nov).")
 fdc = F(DJ, 11)
 dcl = wrap(dc, fdc, W - 32)
 draw_lines(d, dcl, 14, 943, fdc, INK, 15)
@@ -849,6 +877,8 @@ foot = ("Sources: Reuters, BBC, AP, AFP, Guardian, USGS, FIFA, MENAFN, PIB  ·  
         "SUN = happened Sunday  ·  MON = Monday 23 November 2026")
 ff = F(DS, 9)
 d.text(((W - ff.getlength(foot)) / 2, 992), foot, font=ff, fill=SOFT)
+how = "HOW SURE: ✓ = verified to a live source  ·  ? = claim, hedged in the headline"
+d.text(((W - ff.getlength(how)) / 2, 1006), how, font=ff, fill=SOFT)
 
 img.save("entry.png", optimize=True)
 import os, hashlib
