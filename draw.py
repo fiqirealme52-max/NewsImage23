@@ -178,34 +178,35 @@ def sc_nvidia(d, x, y, w, h):
     d.rectangle([x, y, x + w, y + 16], fill=(10, 20, 40))
     d.text((x + 5, y + 2), "NVDA  +33%", font=F(DSB, 11), fill=(120, 220, 140))
     _nas = "NASDAQ +6%"
-    d.text((x + w - 5 - F(DSB, 10).getlength(_nas), y + 2), _nas, font=F(DSB, 10),
+    d.text((x + w - 9 - F(DSB, 10).getlength(_nas), y + 2), _nas, font=F(DSB, 10),
            fill=(200, 210, 225))
     for gy in range(1, 4):
         gy2 = y + 18 + gy * (h - 40) / 4
         d.line([(x + 4, gy2), (x + w - 4, gy2)], fill=(70, 95, 130), width=1)
     pts = [(x + 6, y + h - 26), (x + w * 0.25, y + h - 40), (x + w * 0.45, y + h - 62),
-           (x + w * 0.62, y + h - 52), (x + w * 0.8, y + h - 88), (x + w - 8, y + h - 100)]
+           (x + w * 0.62, y + h - 52), (x + w * 0.8, y + h - 88), (x + w - 40, y + h - 92)]
     chart(d, pts, (80, 220, 130), 4)
-    d.polygon([(x + w - 8, y + h - 100), (x + w - 22, y + h - 98), (x + w - 10, y + h - 86)],
+    d.polygon([(x + w - 40, y + h - 92), (x + w - 54, y + h - 90), (x + w - 42, y + h - 78)],
               fill=(80, 220, 130))
-    d.rectangle([x, y + h - 16, x + w, y + h], fill=(20, 34, 56))
+    # clean ticker tape strip at the very bottom: figures stand ABOVE it, never on the text
+    d.rectangle([x, y + h - 16, x + w, y + h], fill=(12, 24, 44))
     d.line([(x, y + h - 16), (x + w, y + h - 16)], fill=(90, 120, 160), width=1)
-    # ticker tape + skyline + extra traders fill the lower half
-    d.rectangle([x, y + h - 26, x + w, y + h - 16], fill=(12, 24, 44))
-    d.text((x + 5, y + h - 25), "NVDA +33%   TSLA +4%   AAPL +2%   MSFT +1%   AMZN +3%",
+    d.text((x + 5, y + h - 14), "NVDA +33%   TSLA +4%   AAPL +2%   MSFT +1%   AMZN +3%",
            font=F(DSB, 8), fill=(120, 220, 140))
+    # skyline sits above the tape strip, bottom edge on the tape line
     for bx, bw, bh in [(0.60, 0.07, 20), (0.68, 0.05, 30), (0.75, 0.08, 22)]:
-        d.rectangle([x + w * bx, y + h - 26 - bh, x + w * (bx + bw), y + h - 26],
+        d.rectangle([x + w * bx, y + h - 16 - bh, x + w * (bx + bw), y + h - 16],
                     fill=(24, 40, 64))
         for wy in range(2):
-            d.rectangle([x + w * bx + 3, y + h - 26 - bh + 4 + wy * 10,
-                         x + w * bx + 7, y + h - 26 - bh + 8 + wy * 10], fill=(255, 214, 130))
-    person(d, x + w * 0.18, y + h - 44, 36, (90, 60, 50), arm="one")
-    person(d, x + w * 0.86, y + h - 44, 36, (50, 80, 60), arm="up")
+            d.rectangle([x + w * bx + 3, y + h - 16 - bh + 4 + wy * 10,
+                         x + w * bx + 7, y + h - 16 - bh + 8 + wy * 10], fill=(255, 214, 130))
+    # traders stand on the tape line, feet at y+h-16, clear of the tape text below it
+    person(d, x + w * 0.18, y + h - 52, 36, (90, 60, 50), arm="one")
+    person(d, x + w * 0.86, y + h - 52, 36, (50, 80, 60), arm="up")
     # figure from behind, leather jacket, facing the board
     cx = x + w * 0.5
-    person(d, cx, y + h - 52, 44, (30, 30, 34), skin=(170, 140, 110))
-    d.ellipse([cx - 5, y + h - 50, cx + 5, y + h - 42], fill=(52, 40, 32))
+    person(d, cx, y + h - 54, 38, (30, 30, 34), skin=(170, 140, 110))
+    d.ellipse([cx - 5, y + h - 52, cx + 5, y + h - 44], fill=(52, 40, 32))
 
 def sc_merkury(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (10, 22, 44), (28, 52, 86))
@@ -550,9 +551,13 @@ def sc_typhoid(d, x, y, w, h):
 
 def sc_kospi(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (40, 50, 70), (90, 70, 80))
-    # Seoul tower silhouette
-    d.rectangle([x + w * 0.70, y + h * 0.18, x + w * 0.76, y + h * 0.62], fill=(30, 34, 48))
-    d.ellipse([x + w * 0.66, y + h * 0.10, x + w * 0.80, y + h * 0.24], fill=(30, 34, 48))
+    # Seoul tower: lighter shaft with lit windows, ringed deck, antenna — clearly a tower
+    d.rectangle([x + w * 0.70, y + h * 0.18, x + w * 0.76, y + h * 0.62], fill=(52, 58, 74))
+    d.ellipse([x + w * 0.66, y + h * 0.10, x + w * 0.80, y + h * 0.24], fill=(52, 58, 74),
+              outline=(150, 165, 185))
+    d.line([(x + w * 0.73, y + h * 0.10), (x + w * 0.73, y + h * 0.02)], fill=(150, 165, 185), width=1)
+    for wy in (0.30, 0.42, 0.54):
+        d.rectangle([x + w * 0.715, y + h * wy, x + w * 0.745, y + h * wy + 3], fill=(255, 214, 130))
     d.rectangle([x + w * 0.06, y + h * 0.52, x + w * 0.30, y + h * 0.66], fill=(44, 48, 62))
     d.rectangle([x + w * 0.34, y + h * 0.44, x + w * 0.52, y + h * 0.66], fill=(38, 42, 56))
     building(d, x + w * 0.06, y + h * 0.52, w * 0.24, h * 0.14, (44, 48, 62), rows=2, cols=3)
@@ -568,10 +573,13 @@ def sc_belgium(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (150, 180, 205), (215, 225, 235))
     # departure board, all cancelled
     d.rectangle([x + w * 0.06, y + h * 0.06, x + w * 0.94, y + h * 0.42], fill=(20, 26, 36))
-    for r in range(3):
-        ry = y + h * (0.12 + r * 0.11)
-        d.rectangle([x + w * 0.10, ry, x + w * 0.38, ry + 8], fill=(60, 70, 85))
-        d.text((x + w * 0.42, ry - 1), "CANCELLED", font=F(DSB, 8), fill=(255, 90, 70))
+    # one clean CANCELLED stamp, drawn once, centred on the board
+    _ct, _cf = "CANCELLED", F(DSB, 12)
+    _cw = _cf.getlength(_ct)
+    _cx = x + w * 0.5 - _cw / 2
+    _cy = y + h * 0.24 - 6
+    d.rectangle([_cx - 6, _cy - 3, _cx + _cw + 6, _cy + 13], outline=(255, 90, 70), width=2)
+    d.text((_cx, _cy), _ct, font=_cf, fill=(255, 90, 70))
     # control tower
     d.rectangle([x + w * 0.08, y + h * 0.50, x + w * 0.14, y + h * 0.86], fill=(90, 100, 115))
     d.rectangle([x + w * 0.05, y + h * 0.42, x + w * 0.17, y + h * 0.52], fill=(70, 80, 95))
@@ -764,15 +772,15 @@ def proj(lon, lat):
 for poly in CONTINENTS:
     d.polygon([proj(lon, lat) for lon, lat in poly], fill=(228, 214, 178))
 PINS = [
-    (1, -74, 40.7, -10, -4, None, None), (2, 20.1, 32.1, 0, 0, "Benghazi", (-46, -4)),
-    (3, 30.7, 36.9, 6, 6, "Antalya", (-42, 9)), (4, 21, 52.2, -8, -8, None, None),
+    (1, -74, 40.7, -10, -4, None, None), (2, 20.1, 32.1, 0, 0, "Benghazi", (-20, 10)),
+    (3, 30.7, 36.9, 6, 6, "Antalya", (8, -4)), (4, 21, 52.2, -2, -16, None, None),
     (5, 77.2, 28.6, -8, 4, None, None), (6, 39, 22.8, 8, 8, None, None),
-    (7, 172.2, -13.7, 0, 0, None, None), (8, 8.5, 47.4, -10, -2, None, None),
+    (7, 172.2, -13.7, 0, 0, None, None), (8, 8.5, 47.4, 0, -14, None, None),
     (9, -77, 38.9, -2, 8, None, None), (10, 94, 28, 8, -2, None, None),
-    (11, 84, 28.5, 0, -8, None, None), (12, -0.1, 51.5, -12, 4, None, None),
+    (11, 84, 28.5, 0, -8, None, None), (12, -0.1, 51.5, -16, -10, None, None),
     (13, 7.7, 45.1, 4, 8, None, None), (14, 101.5, 3.1, -6, 8, None, None),
     (15, 90.4, 23.8, 10, 10, None, None), (16, 127, 37.5, 0, 0, "Seoul", (9, -4)),
-    (17, 4.4, 50.8, 10, -4, "Brussels", (9, 2)), (18, 30.3, 50.8, 8, -10, "Dymer", (-14, -14)),
+    (17, 4.4, 50.8, -6, 10, "Brussels", (-50, -12)), (18, 30.3, 50.8, 12, -12, "Dymer", (14, -14)),
 ]
 for n, lon, lat, dx, dy, lab, loff in PINS:
     tx, ty = proj(lon, lat)
