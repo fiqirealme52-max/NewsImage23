@@ -402,7 +402,7 @@ def sc_refinery(d, x, y, w, h):
               fill=(255, 110, 30))
     d.line([(x + 8, y + h - 8), (x + w - 8, y + h - 8)], fill=(52, 60, 74),
            width=3)
-    scene_label(d, x + 6, y + 4, "RABIGH", WHITE, size=12)
+    scene_label(d, x + 6, y + 4, "RABIGH", WHITE, size=11)
 
 
 def sc_quake(d, x, y, w, h):
@@ -760,10 +760,15 @@ def draw_lead(d, x, y, w, card):
         ty += 14
     draw_text(d, (x + 2, ty + 4), card["kicker"], F(SANSB, 11), RED)
     hy = ty + 18
-    lines = wrap(d, card["headline"], F(SERIFB, 24), w - 4)
+    hsize = 24
+    lines = wrap(d, card["headline"], F(SERIFB, hsize), w - 4)
+    while len(lines) > 2 and hsize > 18:
+        hsize -= 1
+        lines = wrap(d, card["headline"], F(SERIFB, hsize), w - 4)
+    hlh = hsize + 2
     for i, ln in enumerate(lines[:2]):
-        draw_text(d, (x + 2, hy + i * 26), ln, F(SERIFB, 24), INK)
-    by = hy + len(lines[:2]) * 26 + 1
+        draw_text(d, (x + 2, hy + i * hlh), ln, F(SERIFB, hsize), INK)
+    by = hy + len(lines[:2]) * hlh + 1
     for i, ln in enumerate(wrap(d, card["body"], F(SERIF, 11), w - 4)[:2]):
         draw_text(d, (x + 2, by + i * 13), ln, F(SERIF, 11), INK)
 
