@@ -6,7 +6,7 @@
 #   META +6.55%, GOOGL +6.34%, AMZN +3.47%, AAPL +1.90%, MSFT +1.65%;
 #   Nasdaq +6.51%, S&P +4.73%, Dow +3.01% (Finnhub/Motley Fool) /
 #   Belgium: 404 of 429 flights cancelled (Brussels Airport) /
-#   Dymer 11 dead, 2 missing; Vyshneve 3 killed, 15 hurt (BBC/AFP, Mayor Dikov) /
+#   Dymer 11 dead, 5 in hospital, all missing found; Vyshneve 3 killed, 15 hurt (BBC/AFP, Mayor Dikov) /
 #   Taiex close 36,811.89 +2.16%, TSMC +1.5% (TVBS) / Ebola: WHO warning Mon 23 Nov,
 #   cases doubled in 3 months (UN News) / Nepal INR 15,000 cr = NPR 24,000 cr (PIB) /
 #   Selangor 1,582 evacuees 06:00 Mon (ADINet) / COP31: 2 days over, $120bn goal lost,
@@ -819,7 +819,7 @@ LEADS = [
 MEDS = [
     (18, "SUN", sc_dymer, "DYMER · UKRAINE · SUN", True,
      "Boy, 7, pulled alive after 14 hours under rubble",
-     "11 dead, 2 missing; Vyshneve: 3 killed, 15 hurt. (BBC, AFP)"),
+     "11 dead; none missing. Vyshneve: 3 killed, 15 hurt. (BBC, AFP)"),
     (4, "MON", sc_awacs, "NATO · POLAND · MON", False,
      "NATO sends AWACS to Poland",
      "SACEUR authorises jet; Article 4 not invoked. (NATO)"),
@@ -861,7 +861,7 @@ MEDS = [
      "Close −3.31% at 4,708. (KRX)"),
     (17, "MON", sc_belgium, "BRUSSELS · STRIKE · MON", False,
      "Belgium grounds all flights",
-     "All flights 07:00–21:00 cancelled."),
+     "404 of 429 cancelled 07:00–21:00."),
 ]
 
 # ---------- leads row ----------
