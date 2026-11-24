@@ -138,23 +138,49 @@ d = ImageDraw.Draw(img, "RGBA")
 
 # ---------- header ----------
 f_kick = F(DSB, 15)
-f_mast = F(DJB, 56)
+f_mast = F(DJB, 48)
 f_sub = F(NTI, 17)
 d.text((8, 6), "THE WORLD IN ONE DAY", font=f_kick, fill=RED)
-r = "40 STORIES · 6 REGIONS · MONDAY 23 NOVEMBER 2026"
+r = "40 STORIES · 6 REGIONS · MONDAY 23 NOVEMBER 2026 · WIRES TO 06:49 UTC"
 d.text((W - 8 - F(DSB, 11).getlength(r), 9), r, font=F(DSB, 11), fill=SOFT)
-d.line([(8, 26), (W - 8, 26)], fill=(190, 175, 150), width=1)
-d.text(((W - F(DJB, 56).getlength("Monday 23 November 2026")) / 2, 28),
+d.line([(8, 24), (W - 8, 24)], fill=(190, 175, 150), width=1)
+d.text(((W - F(DJB, 48).getlength("Monday 23 November 2026")) / 2, 27),
        "Monday 23 November 2026", font=f_mast, fill=INK)
-d.line([(8, 92), (W - 8, 92)], fill=INK, width=2)
+d.line([(8, 80), (W - 8, 80)], fill=INK, width=2)
 sub = "Nvidia brings Huang back as shares soar 31%  ·  Russian warship sunk off Benghazi  ·  COP31 collapses with no deal"
-d.text(((W - F(NTI, 17).getlength(sub)) / 2, 96), sub, font=f_sub, fill=RED)
+d.text(((W - F(NTI, 17).getlength(sub)) / 2, 84), sub, font=f_sub, fill=RED)
+
+# ---------- timeline strip: HOUR BY HOUR, UTC (all times verified live, 24 Nov 2026) ----------
+# 05:23 Dymer 11th body (infokava live, 07:23 Kyiv = 05:23 UTC) /
+# 05:30 Taiex +2.16% close (TWSE session ends 13:30 Taipei = 05:30 UTC) /
+# 06:30 Kospi -3.31% close (KRX session ends 15:30 Seoul = 06:30 UTC) /
+# 08:38 COP31 pledge 90+ (metropunch published 2026-11-23T08:38:21Z) /
+# 14:30 Nasdaq opens (NYSE/Nasdaq 09:30 ET = 14:30 UTC) /
+# 19:45 Monza kicks off (Serie A, 19:45 UTC) /
+# 20:00 Brentford kicks off (Premier League, 20:00 UTC) /
+# 21:00 NVDA +31.5% close (NYSE close 16:00 ET = 21:00 UTC; +31.48% R4 F1)
+tl = [("05:23", "Dymer 11th body"), ("05:30", "Taiex +2.16%"),
+      ("06:30", "Kospi \u22123.31%"), ("08:38", "COP31 pledge 90+"),
+      ("14:30", "Nasdaq opens"), ("19:45", "Monza kicks off"),
+      ("20:00", "Brentford kicks off"), ("21:00", "NVDA +31.5% close")]
+d.rectangle([8, 104, W - 8, 122], fill=(245, 238, 220), outline=(200, 185, 160))
+_tl_lab = "HOUR BY HOUR, UTC"
+d.text((14, 109), _tl_lab, font=F(DSB, 9), fill=RED)
+_fb8 = F(DSB, 8)
+_fr8 = F(DJ, 8)
+_tl_w = [(_fb8.getlength(t + " ") + _fr8.getlength(e)) for t, e in tl]
+_tx = 14 + F(DSB, 9).getlength(_tl_lab) + 12
+_tl_gap = (W - 16 - _tx - sum(_tl_w)) / (len(tl) - 1)
+for (t, e), _w in zip(tl, _tl_w):
+    d.text((_tx, 109), t, font=_fb8, fill=RED)
+    d.text((_tx + _fb8.getlength(t + " "), 109), e, font=_fr8, fill=INK)
+    _tx += _w + _tl_gap
 
 # ---------- number strip ----------
 nums = [("40", "STORIES"), ("6", "REGIONS"), ("+31%", "NVIDIA, MON"),
         ("404", "FLIGHTS CANCELLED"), ("+2.16%", "TAIEX, MON"),
         ("104", "MATCHES, 2035 WORLD CUP")]
-y0, y1 = 118, 162
+y0, y1 = 126, 170
 d.rectangle([8, y0, W - 8, y1], outline=(190, 175, 150), width=1)
 cw = (W - 16) / 6
 for i, (n, lab) in enumerate(nums):
@@ -169,7 +195,7 @@ for i, (n, lab) in enumerate(nums):
 # ---------- region strip (6 real regions, sums to 40) ----------
 regs = [("EUROPE 17", BLUE), ("ASIA 7", ORANGE), ("N. AMERICA 9", TEAL),
         ("MIDDLE EAST 2", RED), ("OCEANIA 2", PURPLE), ("AFRICA 3", GREEN2)]
-y0, y1 = 166, 188
+y0, y1 = 174, 196
 x = 8
 for lab, col in regs:
     w = (W - 16) / 6
@@ -185,7 +211,7 @@ def sc_nvidia(d, x, y, w, h):
     d.rectangle([x, y, x + w, y + 16], fill=(10, 20, 40))
     d.text((x + 5, y + 2), "NVDA  +31.5%", font=F(DSB, 11), fill=(120, 220, 140))
     _nas = "NASDAQ +6.5%"
-    d.text((x + w - 9 - F(DSB, 10).getlength(_nas), y + 2), _nas, font=F(DSB, 10),
+    d.text((x + w - 78 - F(DSB, 10).getlength(_nas), y + 2), _nas, font=F(DSB, 10),
            fill=(200, 210, 225))
     for gy in range(1, 4):
         gy2 = y + 18 + gy * (h - 40) / 4
@@ -217,7 +243,7 @@ def sc_nvidia(d, x, y, w, h):
 
 def sc_merkury(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (10, 22, 44), (28, 52, 86))
-    moon(d, x + w - 22, y + 18, 10)
+    moon(d, x + w * 0.70, y + 20, 9)
     stars(d, (x, y, x + w, y + h * 0.5), 12, 5)
     # fire glow behind the hull, low on the water
     d.ellipse([x + w * 0.32, y + h * 0.55, x + w * 0.68, y + h * 0.85], fill=(230, 120, 40))
@@ -286,6 +312,10 @@ def sc_awacs(d, x, y, w, h):
     for cx, cy, cr in [(0.15, 0.25, 14), (0.55, 0.15, 18), (0.85, 0.35, 12), (0.35, 0.55, 10)]:
         d.ellipse([x + w * cx - cr, y + h * cy - cr * 0.55, x + w * cx + cr, y + h * cy + cr * 0.55],
                   fill=(255, 255, 255))
+    # second, lower cloud layer for depth (drawn before the plane)
+    for cx, cy, cr in [(0.25, 0.65, 8), (0.65, 0.70, 9), (0.90, 0.60, 7)]:
+        d.ellipse([x + w * cx - cr, y + h * cy - cr * 0.55, x + w * cx + cr, y + h * cy + cr * 0.55],
+                  fill=(235, 240, 245))
     # AWACS plane side view: fuselage, nose, tail fin, wing, radar dome
     px, py, s = x + w * 0.10, y + h * 0.42, w * 0.72
     d.polygon([(px + s * 0.96, py + s * 0.10), (px + s * 1.08, py + s * 0.02),
@@ -316,6 +346,10 @@ def sc_awacs(d, x, y, w, h):
                (px + s * 0.09, py + s * 0.14)], fill=(205, 210, 215))
     d.ellipse([x + w * 0.44, y + h * 0.80, x + w * 0.50, y + h * 0.86], fill=RED)
     d.line([(x + w * 0.47, y + h * 0.83), (x + w * 0.47, y + h * 0.70)], fill=RED, width=2)
+    # ground crew on the land, clear of the tail fin and the nose
+    person(d, x + w * 0.32, y + h * 0.78, 14, (30, 60, 110))
+    person(d, x + w * 0.58, y + h * 0.78, 14, (30, 60, 110))
+    d.text((x + 8, y + 2), "AWACS", font=F(DSB, 11), fill=NAVY)
 
 def sc_nepal(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (200, 220, 235), (240, 232, 210))
@@ -337,14 +371,16 @@ def sc_nepal(d, x, y, w, h):
     # two figures shaking hands in front of the train, standing on the ground
     person(d, x + w * 0.34, y + h * 0.47, 34, (240, 240, 240), arm="one")
     person(d, x + w * 0.60, y + h * 0.47, 34, (30, 50, 90), arm="one")
+    _np = "\u20b915,000 CR"
+    _nf = F(DSB, 10)
+    d.text((x + (w - _nf.getlength(_np)) / 2, y + 2), _np, font=_nf, fill=INK)
     d.rectangle([x + w * 0.10, y + h * 0.06, x + w * 0.22, y + h * 0.13], fill=(255, 153, 51))
     d.rectangle([x + w * 0.10, y + h * 0.13, x + w * 0.22, y + h * 0.20], fill=(255, 255, 255))
-    d.rectangle([x + w * 0.78, y + h * 0.06, x + w * 0.90, y + h * 0.20], fill=(220, 20, 60))
+    d.rectangle([x + w * 0.80, y + h * 0.28, x + w * 0.92, y + h * 0.42], fill=(220, 20, 60))
 
 def sc_houthis(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (12, 16, 34), (50, 44, 70))
     stars(d, (x, y, x + w, y + h * 0.45), 12, 9)
-    moon(d, x + w * 0.82, y + h * 0.18, 9)
     # refinery towers, lighter so they read against the night sky
     for tx, tw, th in [(0.10, 0.14, 0.55), (0.30, 0.12, 0.42), (0.52, 0.16, 0.62), (0.74, 0.12, 0.48)]:
         d.rectangle([x + w * tx, y + h - th * h - h * 0.18, x + w * (tx + tw), y + h * 0.82],
@@ -362,6 +398,7 @@ def sc_houthis(d, x, y, w, h):
     chart(d, pts, (240, 240, 240), 3)
     d.ellipse([x + w * 0.52, y + h * 0.11, x + w * 0.57, y + h * 0.17], fill=(255, 205, 60))
     d.rectangle([x, y + h * 0.82, x + w, y + h], fill=(30, 28, 36))
+    d.text((x + 8, y + 2), "RABIGH", font=F(DSB, 10), fill=(255, 255, 255))
 
 def sc_vanuatu(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (30, 90, 120), (16, 50, 80))
@@ -386,7 +423,12 @@ def sc_vanuatu(d, x, y, w, h):
     d.line([(x + w * 0.86, y + h * 0.58), (x + w * 0.86, y + h * 0.90)], fill=(255, 255, 255), width=2)
     d.polygon([(x + w * 0.86 - 5, y + h * 0.86), (x + w * 0.86 + 5, y + h * 0.86),
                (x + w * 0.86, y + h * 0.94)], fill=(255, 255, 255))
-    d.text((x + w * 0.70, y + h * 0.04), "601 KM", font=F(DSB, 9), fill=(255, 255, 255))
+    # "601 KM" on a dark tag so the seismograph line passes behind it, not through it
+    _v7 = "601 KM"
+    _f7 = F(DSB, 9)
+    _w7 = _f7.getlength(_v7)
+    d.rectangle([x + w * 0.34 - 3, y, x + w * 0.34 + _w7 + 3, y + 12], fill=(16, 50, 80))
+    d.text((x + w * 0.34, y + 2), _v7, font=_f7, fill=(255, 255, 255))
 
 def sc_fifa(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (30, 90, 140), (90, 150, 190))
@@ -412,6 +454,20 @@ def sc_fifa(d, x, y, w, h):
                (x + w * 0.19, y + h * 0.73)], fill=INK)
     d.rectangle([x, y + h * 0.78, x + w, y + h], fill=(46, 120, 60))
     d.line([(x + w * 0.5, y + h * 0.78), (x + w * 0.5, y + h)], fill=(255, 255, 255), width=2)
+    # crowd heads on the stands (left/centre only — the chip owns the top-right)
+    for _i in range(7):
+        _hx = x + w * (0.12 + _i * 0.08)
+        d.ellipse([_hx - 2.5, y + h * 0.05 - 2.5, _hx + 2.5, y + h * 0.05 + 2.5],
+                  fill=((216, 178, 140) if _i % 2 else (90, 60, 50)))
+    # second player, right side of the pitch
+    person(d, x + w * 0.80, y + h * 0.60, 14, (200, 40, 40), arm="one")
+    # confetti over the stands
+    for _cx, _cy, _cc in [(0.20, 0.18, (255, 200, 60)), (0.35, 0.12, (220, 60, 60)),
+                          (0.50, 0.22, (60, 120, 220)), (0.62, 0.15, (255, 255, 255)),
+                          (0.28, 0.30, (60, 200, 120)), (0.58, 0.32, (255, 200, 60)),
+                          (0.75, 0.35, (220, 60, 60)), (0.42, 0.08, (255, 255, 255))]:
+        d.rectangle([x + w * _cx, y + h * _cy, x + w * _cx + 3, y + h * _cy + 3], fill=_cc)
+    d.text((x + 6, y + h - 12), "104 MATCHES", font=F(DSB, 10), fill=(255, 255, 255))
 
 def sc_house(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (180, 200, 225), (235, 235, 230))
@@ -431,6 +487,14 @@ def sc_house(d, x, y, w, h):
     d.rectangle([x + w * 0.78, y + h * 0.72, x + w * 0.94, y + h * 0.92], fill=(120, 90, 60))
     d.rectangle([x + w * 0.80, y + h * 0.66, x + w * 0.92, y + h * 0.72], fill=(90, 66, 44))
     d.rectangle([x + w * 0.82, y + h * 0.60, x + w * 0.90, y + h * 0.68], fill=(255, 255, 255))
+    d.text((x + 8, y + 2), "258 SEATS", font=F(DSB, 10), fill=INK)
+    # two flags flanking the dome, poles down to the steps
+    for _fx, _fc in [(0.10, BLUE), (0.88, RED)]:
+        d.line([(x + w * _fx, y + h * 0.55), (x + w * _fx, y + h * 0.34)], fill=INK, width=2)
+        d.rectangle([x + w * _fx, y + h * 0.34, x + w * (_fx + 0.08), y + h * 0.40], fill=_fc)
+    # two figures on the steps, in the gaps between columns
+    person(d, x + w * 0.295, y + h * 0.29, 22, (60, 70, 90), arm="one")
+    person(d, x + w * 0.685, y + h * 0.29, 22, (90, 60, 50), arm="one")
 
 def sc_lac(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (170, 200, 225), (235, 228, 200))
@@ -449,17 +513,22 @@ def sc_lac(d, x, y, w, h):
     # two flags
     d.rectangle([x + w * 0.08, y + h * 0.14, x + w * 0.24, y + h * 0.26], fill=(255, 153, 51))
     d.rectangle([x + w * 0.08, y + h * 0.26, x + w * 0.24, y + h * 0.38], fill=(255, 255, 255))
-    d.rectangle([x + w * 0.76, y + h * 0.14, x + w * 0.92, y + h * 0.38], fill=(222, 41, 16))
+    d.rectangle([x + w * 0.78, y + h * 0.36, x + w * 0.90, y + h * 0.48], fill=(222, 41, 16))
     # two soldiers shaking hands at the post
     person(d, x + w * 0.34, y + h * 0.38, 30, (60, 90, 60), arm="one")
     person(d, x + w * 0.64, y + h * 0.38, 30, (90, 60, 50), arm="one")
     d.rectangle([x, y + h * 0.82, x + w, y + h], fill=(150, 170, 120))
+    _t10 = "10-DAY TALKS"
+    _f10 = F(DSB, 9)
+    _tw10 = _f10.getlength(_t10)
+    # centre in the space left of the word chip (chip starts at x+w-65)
+    d.text((x + 8 + (w - 73 - _tw10) / 2, y + 2), _t10, font=_f10, fill=INK)
 
 def sc_taiex(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (16, 34, 58), (38, 68, 96))
     stars(d, (x, y, x + w, y + h * 0.4), 8, 11)
-    # Taipei 101: tapered tower, narrow at the top, right side
-    tx = x + w * 0.72
+    # Taipei 101: tapered tower, narrow at the top, right side (shifted left of the chip)
+    tx = x + w * 0.62
     for i in range(5):
         ww = 14 + i * 3
         d.rectangle([tx - ww / 2, y + h * (0.18 + i * 0.11), tx + ww / 2,
@@ -482,22 +551,29 @@ def sc_nhs(d, x, y, w, h):
     # hospital
     d.rectangle([x + w * 0.08, y + h * 0.30, x + w * 0.55, y + h * 0.78], fill=(240, 240, 238))
     d.rectangle([x + w * 0.08, y + h * 0.30, x + w * 0.55, y + h * 0.38], fill=(0, 90, 160))
-    d.rectangle([x + w * 0.30, y + h * 0.14, x + w * 0.36, y + h * 0.30], fill=(255, 255, 255))
-    d.rectangle([x + w * 0.27, y + h * 0.20, x + w * 0.39, y + h * 0.26], fill=(255, 255, 255))
+    # hospital cross, moved right so the AI TRIAL label clears it
+    d.rectangle([x + w * 0.42, y + h * 0.16, x + w * 0.48, y + h * 0.32], fill=(255, 255, 255))
+    d.rectangle([x + w * 0.39, y + h * 0.21, x + w * 0.51, y + h * 0.27], fill=(255, 255, 255))
     for r in range(2):
         for c in range(3):
             d.rectangle([x + w * (0.13 + c * 0.13), y + h * (0.44 + r * 0.14),
                          x + w * (0.20 + c * 0.13), y + h * (0.52 + r * 0.14)], fill=(140, 190, 220))
     # screen with scan: light screen, dark lung oval, pink highlight, crosshair
-    d.rectangle([x + w * 0.60, y + h * 0.22, x + w * 0.94, y + h * 0.62], fill=(225, 232, 236))
-    d.ellipse([x + w * 0.68, y + h * 0.28, x + w * 0.86, y + h * 0.56], fill=(52, 62, 74))
-    d.ellipse([x + w * 0.73, y + h * 0.36, x + w * 0.81, y + h * 0.48], fill=(225, 110, 150))
-    d.line([(x + w * 0.77, y + h * 0.30), (x + w * 0.77, y + h * 0.54)], fill=(200, 210, 215),
+    # (shifted down 0.04h so the word chip clears the oval)
+    d.rectangle([x + w * 0.60, y + h * 0.26, x + w * 0.94, y + h * 0.66], fill=(225, 232, 236))
+    d.ellipse([x + w * 0.68, y + h * 0.32, x + w * 0.86, y + h * 0.60], fill=(52, 62, 74))
+    d.ellipse([x + w * 0.73, y + h * 0.40, x + w * 0.81, y + h * 0.52], fill=(225, 110, 150))
+    d.line([(x + w * 0.77, y + h * 0.34), (x + w * 0.77, y + h * 0.58)], fill=(200, 210, 215),
            width=1)
-    d.line([(x + w * 0.70, y + h * 0.42), (x + w * 0.84, y + h * 0.42)], fill=(200, 210, 215),
+    d.line([(x + w * 0.70, y + h * 0.46), (x + w * 0.84, y + h * 0.46)], fill=(200, 210, 215),
            width=1)
     person(d, x + w * 0.72, y + h * 0.36, 32, (255, 255, 255), arm="one")
     d.rectangle([x, y + h * 0.82, x + w, y + h], fill=(150, 185, 140))
+    d.text((x + 8, y + 2), "AI TRIAL", font=F(DSB, 10), fill=INK)
+    # second doctor at the screen, and a door on the hospital block
+    person(d, x + w * 0.88, y + h * 0.40, 28, (255, 255, 255), arm="one")
+    d.rectangle([x + w * 0.47, y + h * 0.62, x + w * 0.53, y + h * 0.78], fill=(60, 60, 60))
+    d.ellipse([x + w * 0.515, y + h * 0.70, x + w * 0.525, y + h * 0.71], fill=(255, 214, 130))
 
 def sc_sport(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (60, 110, 170), (200, 220, 235))
@@ -520,9 +596,10 @@ def sc_sport(d, x, y, w, h):
     d.line([(mx - 7, my + 1), (mx + 11, my + 1)], fill=(200, 40, 40), width=3)
     d.line([(mx - 7, my + 1), (mx - 2, my - 9)], fill=(200, 40, 40), width=2)
     d.line([(mx + 11, my + 1), (mx + 6, my - 9)], fill=(200, 40, 40), width=2)
-    # player figure
-    person(d, x + w * 0.74, y + h * 0.18, 34, (255, 255, 255), arm="up")
+    # player figure (moved left of the chip zone)
+    person(d, x + w * 0.60, y + h * 0.24, 34, (255, 255, 255), arm="up")
     d.rectangle([x, y + h * 0.88, x + w, y + h], fill=(40, 100, 70))
+    d.text((x + 6, y + h - 13), "ATP FINALS", font=F(DSB, 9), fill=(255, 255, 255))
 
 def sc_selangor(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (140, 160, 180), (190, 200, 205))
@@ -530,14 +607,14 @@ def sc_selangor(d, x, y, w, h):
     for i in range(10):
         rx = x + ((i * 37) % int(w - 6)) + 3
         d.line([(rx, y + 4), (rx - 4, y + 16)], fill=(220, 230, 240), width=1)
-    # houses on stilts
-    for hx, hw in [(0.08, 0.26), (0.42, 0.26), (0.74, 0.20)]:
-        d.rectangle([x + w * hx, y + h * 0.30, x + w * (hx + hw), y + h * 0.52], fill=(190, 120, 70))
-        d.polygon([(x + w * (hx - 0.02), y + h * 0.30), (x + w * (hx + hw / 2), y + h * 0.18),
-                   (x + w * (hx + hw + 0.02), y + h * 0.30)], fill=(120, 60, 40))
-        d.line([(x + w * (hx + 0.04), y + h * 0.52), (x + w * (hx + 0.04), y + h * 0.66)],
+    # houses on stilts (third house lowered 0.16h so its roof clears the word chip)
+    for hx, hw, dy in [(0.08, 0.26, 0.0), (0.42, 0.26, 0.0), (0.74, 0.20, 0.16)]:
+        d.rectangle([x + w * hx, y + h * (0.30 + dy), x + w * (hx + hw), y + h * (0.52 + dy)], fill=(190, 120, 70))
+        d.polygon([(x + w * (hx - 0.02), y + h * (0.30 + dy)), (x + w * (hx + hw / 2), y + h * (0.18 + dy)),
+                   (x + w * (hx + hw + 0.02), y + h * (0.30 + dy))], fill=(120, 60, 40))
+        d.line([(x + w * (hx + 0.04), y + h * (0.52 + dy)), (x + w * (hx + 0.04), y + h * (0.66 + dy))],
                fill=(90, 70, 50), width=2)
-        d.line([(x + w * (hx + hw - 0.04), y + h * 0.52), (x + w * (hx + hw - 0.04), y + h * 0.66)],
+        d.line([(x + w * (hx + hw - 0.04), y + h * (0.52 + dy)), (x + w * (hx + hw - 0.04), y + h * (0.66 + dy))],
                fill=(90, 70, 50), width=2)
     # flood water + boat with family
     d.rectangle([x, y + h * 0.62, x + w, y + h], fill=(70, 110, 140))
@@ -548,36 +625,46 @@ def sc_selangor(d, x, y, w, h):
     d.line([(x + w * 0.50, y + h * 0.56), (x + w * 0.50, y + h * 0.72)], fill=(90, 70, 50), width=2)
     for wy in (0.88, 0.94):
         d.line([(x + 6, y + h * wy), (x + w - 6, y + h * wy)], fill=(150, 190, 210), width=1)
+    d.text((x + 6, y + 2), "1,582", font=F(DSB, 10), fill=INK)
 
 def sc_ebola(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (200, 222, 232), (245, 240, 225))
-    # clinic block with cross
+    # clinic block with cross (cross lowered so the case-count label clears it)
     d.rectangle([x + w * 0.06, y + h * 0.30, x + w * 0.44, y + h * 0.74], fill=(250, 250, 248))
     d.rectangle([x + w * 0.06, y + h * 0.30, x + w * 0.44, y + h * 0.38], fill=(0, 120, 120))
-    d.rectangle([x + w * 0.22, y + h * 0.14, x + w * 0.28, y + h * 0.30], fill=(255, 255, 255))
-    d.rectangle([x + w * 0.19, y + h * 0.19, x + w * 0.31, y + h * 0.25], fill=(255, 255, 255))
+    d.rectangle([x + w * 0.22, y + h * 0.24, x + w * 0.28, y + h * 0.40], fill=(255, 255, 255))
+    d.rectangle([x + w * 0.19, y + h * 0.29, x + w * 0.31, y + h * 0.35], fill=(255, 255, 255))
     for c in range(3):
         d.rectangle([x + w * (0.10 + c * 0.11), y + h * 0.44, x + w * (0.17 + c * 0.11),
                      y + h * 0.54], fill=(140, 190, 210))
-    # warning triangle
+    # warning triangle, shrunk so the third responder clears it
     cx, cy = x + w * 0.70, y + h * 0.42
-    d.polygon([(cx, cy - 20), (cx + 20, cy + 14), (cx - 20, cy + 14)], fill=(250, 200, 40),
+    d.polygon([(cx, cy - 14), (cx + 14, cy + 10), (cx - 14, cy + 10)], fill=(250, 200, 40),
               outline=INK)
-    d.text((cx - 3, cy - 8), "!", font=F(DSB, 16), fill=INK)
-    # two responders at the clinic door
+    d.text((cx - 2, cy - 6), "!", font=F(DSB, 12), fill=INK)
+    # relief tent behind the responders
+    d.polygon([(x + w * 0.48, y + h * 0.78), (x + w * 0.58, y + h * 0.58),
+               (x + w * 0.68, y + h * 0.78)], fill=(200, 180, 140))
+    d.line([(x + w * 0.58, y + h * 0.58), (x + w * 0.58, y + h * 0.78)], fill=(150, 130, 100),
+           width=1)
+    # three responders at the clinic door
     person(d, x + w * 0.56, y + h * 0.52, 24, (40, 90, 160), arm="one")
+    person(d, x + w * 0.80, y + h * 0.52, 24, (40, 90, 160), arm="one")
     person(d, x + w * 0.88, y + h * 0.52, 24, (40, 90, 160), arm="one")
     d.rectangle([x, y + h * 0.84, x + w, y + h], fill=(170, 200, 160))
+    # case count: freshest verified figure, UN News (released 20 Nov): 11,762 cases
+    d.text((x + 8, y + 2), "11,762 CASES", font=F(DSB, 9), fill=INK)
 
 def sc_kospi(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (40, 50, 70), (90, 70, 80))
     # Seoul tower: lighter shaft with lit windows, ringed deck, antenna — clearly a tower
-    d.rectangle([x + w * 0.70, y + h * 0.18, x + w * 0.76, y + h * 0.62], fill=(52, 58, 74))
-    d.ellipse([x + w * 0.66, y + h * 0.10, x + w * 0.80, y + h * 0.24], fill=(52, 58, 74),
+    # (shifted left so the word chip clears the deck)
+    d.rectangle([x + w * 0.55, y + h * 0.18, x + w * 0.61, y + h * 0.62], fill=(52, 58, 74))
+    d.ellipse([x + w * 0.51, y + h * 0.10, x + w * 0.65, y + h * 0.24], fill=(52, 58, 74),
               outline=(150, 165, 185))
-    d.line([(x + w * 0.73, y + h * 0.10), (x + w * 0.73, y + h * 0.02)], fill=(150, 165, 185), width=1)
+    d.line([(x + w * 0.58, y + h * 0.10), (x + w * 0.58, y + h * 0.02)], fill=(150, 165, 185), width=1)
     for wy in (0.30, 0.42, 0.54):
-        d.rectangle([x + w * 0.715, y + h * wy, x + w * 0.745, y + h * wy + 3], fill=(255, 214, 130))
+        d.rectangle([x + w * 0.565, y + h * wy, x + w * 0.595, y + h * wy + 3], fill=(255, 214, 130))
     d.rectangle([x + w * 0.06, y + h * 0.52, x + w * 0.30, y + h * 0.66], fill=(44, 48, 62))
     d.rectangle([x + w * 0.34, y + h * 0.44, x + w * 0.52, y + h * 0.66], fill=(38, 42, 56))
     building(d, x + w * 0.06, y + h * 0.52, w * 0.24, h * 0.14, (44, 48, 62), rows=2, cols=3)
@@ -587,6 +674,18 @@ def sc_kospi(d, x, y, w, h):
     chart(d, pts, (240, 70, 60), 4)
     d.polygon([(x + w - 6, y + h * 0.78), (x + w - 20, y + h * 0.74), (x + w - 8, y + h * 0.90)],
               fill=(240, 70, 60))
+    # intraday path: plunge to the -5.8% low, then recovery to the -3.31% close
+    _op = [(x + 6, y + h * 0.20), (x + w * 0.30, y + h * 0.45), (x + w * 0.55, y + h * 0.82),
+           (x + w * 0.75, y + h * 0.70), (x + w - 6, y + h * 0.62)]
+    chart(d, _op, (230, 140, 40), 2)
+    # close label with a dark backing so it reads over both chart lines
+    _k16 = "\u22123.31%"
+    _f16 = F(DSB, 10)
+    _kw = _f16.getlength(_k16)
+    d.rectangle([x + 5, y + h * 0.30 - 2, x + 5 + _kw + 7, y + h * 0.30 + 12], fill=(24, 28, 40))
+    d.text((x + 8, y + h * 0.30), _k16, font=_f16, fill=(255, 255, 255))
+    # trader watching the board, right side
+    person(d, x + w * 0.88, y + h * 0.44, 22, (90, 60, 50), arm="one")
     d.rectangle([x, y + h * 0.86, x + w, y + h], fill=(24, 28, 40))
 
 def sc_belgium(d, x, y, w, h):
@@ -596,7 +695,7 @@ def sc_belgium(d, x, y, w, h):
     # one clean CANCELLED stamp, drawn once, centred on the board
     _ct, _cf = "CANCELLED", F(DSB, 12)
     _cw = _cf.getlength(_ct)
-    _cx = x + w * 0.5 - _cw / 2
+    _cx = x + w * 0.32 - _cw / 2
     _cy = y + h * 0.24 - 6
     d.rectangle([_cx - 6, _cy - 3, _cx + _cw + 6, _cy + 13], outline=(255, 90, 70), width=2)
     d.text((_cx, _cy), _ct, font=_cf, fill=(255, 90, 70))
@@ -615,8 +714,8 @@ def sc_belgium(d, x, y, w, h):
 
 def sc_dymer(d, x, y, w, h):
     vgrad(d, (x, y, x + w, y + h), (120, 125, 150), (205, 175, 140))
-    # dawn sun + broken skyline
-    d.ellipse([x + w * 0.78, y + h * 0.08, x + w * 0.94, y + h * 0.24], fill=(255, 215, 140))
+    # dawn sun + broken skyline (sun moved left of the chip zone)
+    d.ellipse([x + w * 0.48, y + h * 0.06, x + w * 0.64, y + h * 0.22], fill=(255, 215, 140))
     d.polygon([(x, y + h * 0.48), (x + w * 0.14, y + h * 0.48), (x + w * 0.18, y + h * 0.34),
                (x + w * 0.30, y + h * 0.48)], fill=(95, 85, 78))
     d.polygon([(x + w * 0.55, y + h * 0.48), (x + w * 0.66, y + h * 0.30), (x + w * 0.80, y + h * 0.48)],
@@ -646,19 +745,30 @@ def sc_dymer(d, x, y, w, h):
     d.rectangle([x + w * 0.28, y + h * 0.73, x + w * 0.72, y + h * 0.81], fill=(240, 240, 235))
     d.ellipse([x + w * 0.30, y + h * 0.69, x + w * 0.37, y + h * 0.76], fill=(216, 178, 140))
     d.rectangle([x + w * 0.36, y + h * 0.71, x + w * 0.70, y + h * 0.79], fill=(40, 90, 160))
+    d.text((x + 8, y + 2), "14 HOURS", font=F(DSB, 10), fill=INK)
 
 # ---------- card renderers ----------
-def lead_card(d, x, y, w, h, num, tag, scene, loc, head, body, chip="✓"):
+def word_chip(d, sx, sy, sw, word):
+    # 64x15 white word chip at the top-right corner inside a scene
+    cx0 = sx + sw - 65
+    cy0 = sy + 1
+    col = RED if word == "CLAIM" else ((31, 122, 80) if word == "ON RECORD" else INK)
+    d.rounded_rectangle([cx0, cy0, cx0 + 64, cy0 + 15], radius=3, fill=(255, 255, 255),
+                        outline=(190, 175, 150))
+    f = F(DSB, 8)
+    tw = f.getlength(word)
+    d.text((cx0 + (64 - tw) / 2, cy0 + 4), word, font=f, fill=col)
+
+def lead_card(d, x, y, w, h, num, tag, scene, loc, head, body, chip="REPORTED"):
     d.rectangle([x, y, x + w, y + h], fill=(255, 255, 255), outline=(200, 185, 160))
     d.rectangle([x, y, x + w, y + 16], fill=RED)
     d.text((x + 6, y + 2), "%d · LEAD" % num, font=F(DSB, 10), fill=(255, 255, 255))
     _tw = F(DSB, 10).getlength(tag)
     d.text((x + w - 6 - _tw, y + 2), tag, font=F(DSB, 10), fill=(255, 255, 255))
-    _cw = F(DSB, 10).getlength(chip)
-    d.text((x + w - 6 - _tw - 5 - _cw, y + 2), chip, font=F(DSB, 10), fill=(255, 255, 255))
     sy = y + 16
-    scene(d, x + 1, sy, w - 2, 104)
-    ty = sy + 104
+    scene(d, x + 1, sy, w - 2, 96)
+    word_chip(d, x + 1, sy, w - 2, chip)
+    ty = sy + 96
     d.text((x + 6, ty + 2), loc, font=F(DSB, 9), fill=RED)
     fh = F(DJB, 18)
     hl = wrap(head, fh, w - 12)
@@ -668,17 +778,16 @@ def lead_card(d, x, y, w, h, num, tag, scene, loc, head, body, chip="✓"):
     draw_lines(d, bl[:2], x + 6, ty + 13 + len(hl[:2]) * 20 + 2, fb, SOFT, 14)
 
 def med_card(d, x, y, w, h, num, tag, scene, loc, head, body, hero=False, blines=1, sh=52,
-             chip="✓"):
+             chip="REPORTED"):
     d.rectangle([x, y, x + w, y + h], fill=(255, 255, 255), outline=(200, 185, 160))
     d.rectangle([x, y, x + w, y + 14], fill=RED)
     d.text((x + 5, y + 2), "%d · HERO" % num if hero else "%d" % num, font=F(DSB, 10),
            fill=(255, 255, 255))
     _tw = F(DSB, 9).getlength(tag)
     d.text((x + w - 5 - _tw, y + 2), tag, font=F(DSB, 9), fill=(255, 255, 255))
-    _cw = F(DSB, 9).getlength(chip)
-    d.text((x + w - 5 - _tw - 4 - _cw, y + 2), chip, font=F(DSB, 9), fill=(255, 255, 255))
     sy = y + 14
     scene(d, x + 1, sy, w - 2, sh)
+    word_chip(d, x + 1, sy, w - 2, chip)
     ty = sy + sh
     d.text((x + 5, ty + 1), loc, font=F(DSB, 8), fill=RED)
     fh = F(DJB, 15) if hero else F(DJB, 13)
@@ -750,10 +859,17 @@ MEDS = [
 ]
 
 # ---------- leads row ----------
+# verification status per story: ON RECORD = official source, REPORTED = press-reported,
+# CLAIM = single-source claim (M6: only the Houthis claim the hit)
+CHIP = {1: "REPORTED", 2: "REPORTED", 3: "REPORTED", 4: "ON RECORD",
+        5: "ON RECORD", 6: "CLAIM", 7: "ON RECORD", 8: "ON RECORD",
+        9: "REPORTED", 10: "REPORTED", 11: "ON RECORD", 12: "REPORTED",
+        13: "ON RECORD", 14: "REPORTED", 15: "REPORTED", 16: "ON RECORD",
+        17: "ON RECORD", 18: "REPORTED"}
 lw = (W - 16 - 14) / 3
 for i, (num, tag, scene, loc, head, body) in enumerate(LEADS):
-    lead_card(d, 8 + i * (lw + 7), 192, lw, 204, num, tag, scene, loc, head, body,
-              chip="?" if num == 2 else "✓")
+    lead_card(d, 8 + i * (lw + 7), 200, lw, 196, num, tag, scene, loc, head, body,
+              chip=CHIP[num])
 
 # ---------- medium rows: A (hero row, 147px) / B / C (116px) ----------
 mw = (W - 16 - 24) / 5
@@ -761,13 +877,13 @@ rows = [(400, 158, MEDS[0:5], 76, 2), (562, 118, MEDS[5:10], 52, 1), (684, 118, 
 for ry, rh, items, sh, bl in rows:
     for j, (num, tag, scene, loc, hero, head, body) in enumerate(items):
         med_card(d, 8 + j * (mw + 6), ry, mw, rh, num, tag, scene, loc, head, body,
-                 hero=hero, blines=bl, sh=sh, chip="?" if num == 6 else "✓")
+                 hero=hero, blines=bl, sh=sh, chip=CHIP[num])
 
 # ---------- map + ALSO ON ----------
 d.text((8, 806), "WHERE IT HAPPENED — PINS 1–18", font=F(DSB, 11), fill=INK)
 d.text((428, 806), "ALSO ON — 22 BRIEFS", font=F(DSB, 11), fill=INK)
 mx0, my0, mx1, my1 = 8, 820, 418, 936
-d.rectangle([mx0, my0, mx1, my1], fill=NAVY_DK, outline=(200, 185, 160))
+d.rectangle([mx0, my0, mx1, my1], fill=(232, 240, 244), outline=(200, 185, 160))
 CONTINENTS = [
     [(-168, 66), (-140, 70), (-120, 72), (-95, 80), (-80, 73), (-70, 62), (-55, 52),
      (-60, 45), (-75, 35), (-80, 26), (-90, 21), (-97, 16), (-105, 20), (-115, 30),
@@ -792,37 +908,52 @@ CONTINENTS = [
      (120, -10), (113, -22), (105, -15), (100, -5)],
 ]
 def proj(lon, lat):
-    px = mx0 + (lon + 170) / 360 * (mx1 - mx0)
-    py = my0 + (85 - lat) / 145 * (my1 - my0)
+    px = mx0 + (lon + 170) / 350 * (mx1 - mx0)
+    py = my0 + (83 - lat) / 141 * (my1 - my0)
     return px, py
-for poly in CONTINENTS:
-    d.polygon([proj(lon, lat) for lon, lat in poly], fill=(228, 214, 178))
+# dotted map: steel-blue dots inside the continent polygons, on a light ground
+_CONT = [[proj(lon, lat) for lon, lat in poly] for poly in CONTINENTS]
+def _inside(px, py, poly):
+    ins = False
+    n = len(poly)
+    j = n - 1
+    for i in range(n):
+        xi, yi = poly[i]
+        xj, yj = poly[j]
+        if ((yi > py) != (yj > py)) and (px < (xj - xi) * (py - yi) / (yj - yi) + xi):
+            ins = not ins
+        j = i
+    return ins
+for _gy in range(my0 + 3, my1 - 2, 4):
+    for _gx in range(mx0 + 3, mx1 - 2, 4):
+        if any(_inside(_gx, _gy, _p) for _p in _CONT):
+            d.ellipse([_gx - 1, _gy - 1, _gx + 1, _gy + 1], fill=(90, 130, 160))
 PINS = [
     (1, -74, 40.7, -10, -4, None, None), (2, 20.1, 32.1, 4, 2, "Benghazi", (-28, 14)),
-    (3, 30.7, 36.9, 6, 6, "Antalya", (8, -18)), (4, 21, 52.2, -2, -16, None, None),
-    (5, 77.2, 28.6, -8, 4, None, None), (6, 39, 22.8, 8, 8, None, None),
-    (7, 172.2, -13.7, 0, 0, None, None), (8, 8.5, 47.4, 0, -14, None, None),
+    (3, 30.7, 36.9, 9, 12, "Antalya", (8, -18)), (4, 21, 52.2, -2, -20, None, None),
+    (5, 77.2, 28.6, -8, 4, None, None), (6, 39, 22.8, 12, 12, None, None),
+    (7, 172.2, -13.7, 0, 0, None, None), (8, 8.5, 47.4, -11, -22, None, None),
     (9, -77, 38.9, -2, 8, None, None), (10, 94, 28, 8, -2, None, None),
-    (11, 121.6, 25.0, -14, 10, None, None), (12, -0.1, 51.5, -16, -10, None, None),
-    (13, 7.7, 45.1, 4, 8, None, None), (14, 101.5, 3.1, -6, 8, None, None),
+    (11, 121.6, 25.0, -14, 10, "Taipei", (10, -6)), (12, -0.1, 51.5, -32, -17, "London", (-48, -2)),
+    (13, 7.7, 45.1, -14, 20, None, None), (14, 101.5, 3.1, -6, 8, None, None),
     (15, 30.2, 1.6, 0, 0, None, None), (16, 127, 37.5, 0, 0, "Seoul", (13, -4)),
-    (17, 4.4, 50.8, -6, 10, "Brussels", (-58, -2)), (18, 30.3, 50.8, 12, -12, "Dymer", (14, -14)),
+    (17, 4.4, 50.8, -21, 1, "Brussels", (-58, -2)), (18, 30.3, 50.8, 14, -11, "Dymer", (14, -14)),
 ]
 for n, lon, lat, dx, dy, lab, loff in PINS:
     tx, ty = proj(lon, lat)
     px, py = tx + dx, ty + dy
     if dx or dy:
-        d.line([(tx, ty), (px, py)], fill=(255, 255, 255), width=1)
-        d.ellipse([tx - 1.5, ty - 1.5, tx + 1.5, ty + 1.5], fill=(255, 255, 255))
+        d.line([(tx, ty), (px, py)], fill=(70, 100, 130), width=1)
+        d.ellipse([tx - 1.5, ty - 1.5, tx + 1.5, ty + 1.5], fill=(70, 100, 130))
     d.ellipse([px - 6, py - 6, px + 6, py + 6], fill=RED, outline=(255, 255, 255))
     fn = F(DSB, 8)
     s = str(n)
     d.text((px - fn.getlength(s) / 2, py - 5.5), s, font=fn, fill=(255, 255, 255))
     if lab:
-        d.text((px + loff[0], py + loff[1]), lab, font=F(DSB, 8), fill=(255, 255, 255),
-               stroke_width=1, stroke_fill=NAVY_DK)
+        d.text((px + loff[0], py + loff[1]), lab, font=F(DSB, 8), fill=INK,
+               stroke_width=1, stroke_fill=(255, 255, 255))
 d.text((mx0 + 6, my1 - 13), "RED NUMBERS MARK STORIES 1–18 · POSITIONS APPROXIMATE",
-       font=F(DSB, 8), fill=(200, 205, 215))
+       font=F(DSB, 8), fill=(60, 70, 80))
 
 BRIEFS = [
     "19 India-NZ 1st Test drawn (AP, MON)",
@@ -838,7 +969,7 @@ BRIEFS = [
     "29 Trump hush bid revived (AP, MON)",
     "30 Monza 3-0 Fiorentina (LIVESCORE, MON)",
     "31 Levante draw 1-1 with Elche (SKY, MON)",
-    "32 Lilly buys LoQus23, $725m (MON)",
+    "32 Lilly buys LoQus23 $725m (LAW360,MON)",
     "33 Iowa blast goes ahead Wed (WSJ, MON)",
     "34 Commanders 22-20 Bengals (AP, MON)",
     "35 Indonesia fire kills 24 (REUTERS, MON)",
@@ -862,12 +993,13 @@ for ci, col in enumerate(cols):
 
 # ---------- DATE CHECK ----------
 d.rectangle([8, 938, W - 8, 988], outline=RED, width=2)
-dc = ("DATE CHECK — This page covers Monday 23 November 2026. Sunday events "
-      "flagged SUN — only their Monday tolls and outcomes are the news. "
+dc = ("DATE CHECK — DATES AUDITED · This page covers Monday 23 November 2026. "
+      "Sunday events are flagged SUN. "
       "Nvidia's 12 Nov resignation is NOT the story — its Monday return is Lead 1. "
       "Excluded: COP31 'nears deal' (false), Kryvyi Rih (20 Nov), Kerch Bridge "
-      "(16–17 Nov), Tuesday's Kospi rebound (+7.2%), Hormuz tankers + Gaza strikes "
-      "(Sat 21 Nov).")
+      "(16–17 Nov), Kospi Tue rebound (+7.2%), Hormuz + Gaza (Sat 21 Nov), "
+      "Vancouver 2–0 RSL (Sun 22 Nov), Sinaloa kingpin (Fri 20 Nov), EU–Indonesia "
+      "deal (Sat 21 Nov), Kenya–DRC pact (Sun 22 Nov), Santos 0–2 Grêmio (Tue 24 Nov).")
 fdc = F(DJ, 11)
 dcl = wrap(dc, fdc, W - 32)
 draw_lines(d, dcl, 14, 943, fdc, INK, 15)
@@ -877,7 +1009,7 @@ foot = ("Sources: Reuters, BBC, AP, AFP, Guardian, USGS, FIFA, MENAFN, PIB  ·  
         "SUN = happened Sunday  ·  MON = Monday 23 November 2026")
 ff = F(DS, 9)
 d.text(((W - ff.getlength(foot)) / 2, 992), foot, font=ff, fill=SOFT)
-how = "HOW SURE: ✓ = verified to a live source  ·  ? = claim, hedged in the headline"
+how = "HOW SURE: ON RECORD = official data  ·  REPORTED = reported by the press  ·  CLAIM = single-source claim"
 d.text(((W - ff.getlength(how)) / 2, 1006), how, font=ff, fill=SOFT)
 
 img.save("entry.png", optimize=True)
