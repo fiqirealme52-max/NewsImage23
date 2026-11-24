@@ -1,29 +1,21 @@
-// News 23 round 3 entry (Node 22, standard library only): the image is the
-// entry.png beside this file, and the program copies it to /output/entry.png.
-// The gate takes a whole PNG of at most 1 MiB and 1024 by 1024 pixels, and the
-// judge sees exactly the bytes copied. Outside the grader's container,
-// MAKEFUN_OUTPUT_DIR stands in for /output:
-//   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
+import * as fs from "node:fs";
+import * as path from "node:path";
 
-import { copyFileSync, existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+const outDir = process.env.MAKEFUN_OUTPUT_DIR || "/output";
+const src = path.join(process.cwd(), "entry.png");
+const dest = path.join(outDir, "entry.png");
 
-// Exit codes: 1 if entry.png is missing beside main.ts, 1 if the copied
-// bytes differ from the source, 0 on a byte-identical copy.
-const src = new URL('./entry.png', import.meta.url);
-const dst = join(process.env.MAKEFUN_OUTPUT_DIR ?? '/output', 'entry.png');
-
-if (!existsSync(src)) {
-  console.error('entry.png not found beside main.ts');
+if (!fs.existsSync(src)) {
+  console.error("entry.png missing in repo root");
   process.exit(1);
 }
+fs.mkdirSync(outDir, { recursive: true });
+fs.copyFileSync(src, dest);
 
-copyFileSync(src, dst);
-
-const a = readFileSync(src);
-const b = readFileSync(dst);
+const a = fs.readFileSync(src);
+const b = fs.readFileSync(dest);
 if (!a.equals(b)) {
-  console.error('byte verification failed: copied entry.png differs from the source');
+  console.error("copy mismatch: entry.png differs after copy");
   process.exit(1);
 }
-console.log(`copied entry.png (${a.length} bytes) to ${dst}`);
+console.log("entry.png copied to " + dest + " (" + a.length + " bytes, identical)");
