@@ -261,10 +261,15 @@ def sc_chart_up(d, x, y, w, h):
            (x + w * 0.42, y + h - 48), (x + w * 0.58, y + h - 30),
            (x + w * 0.74, y + h - 52), (x + w - 6, y + 16)]
     d.line(pts, fill=BRIGHTGREEN, width=3, joint="curve")
+    # city skyline with lit windows along the bottom, left and right
+    building(d, x + 8, y + h - 30, 18, 30, fill=(40, 60, 86))
+    building(d, x + 30, y + h - 22, 14, 22, fill=(52, 72, 100))
+    building(d, x + w // 2 - 6, y + h - 26, 16, 26, fill=(40, 60, 86))
     building(d, x + w - 78, y + h - 34, 20, 34, fill=(40, 60, 86))
     building(d, x + w - 52, y + h - 26, 18, 26, fill=(40, 60, 86))
     building(d, x + w - 28, y + h - 40, 20, 40, fill=(40, 60, 86))
     person(d, x + 30, y + h - 30, (120, 80, 60), h=14, arm_up=True)
+    person(d, x + w // 2 + 8, y + h - 30, (30, 90, 60), h=14, arm_up=True)
     person(d, x + w - 100, y + h - 28, (30, 90, 60), h=14)
     scene_label(d, x + 6, y + 6, "NVDA +31.5%", BRIGHTGREEN, size=13)
     draw_text(d, (x + w - 100, y + 6), "NASDAQ +6.5%", F(SANSB, 12),
@@ -274,23 +279,45 @@ def sc_chart_up(d, x, y, w, h):
 def sc_ship(d, x, y, w, h):
     rect(d, x, y, x + w, y + h, fill=(12, 24, 44))
     stars(d, x, y, x + w, y + h - 20, 16, seed=23)
-    d.ellipse([x + w - 112, y + 8, x + w - 88, y + 32], fill=(235, 228, 200))
-    # capsized hull: dark wedge, bow up on the right, orange fire glow
-    d.polygon([(x + 18, y + h - 34), (x + w * 0.62, y + h - 44),
-               (x + w - 22, y + h - 26), (x + w - 30, y + h - 18),
-               (x + 30, y + h - 18)], fill=(28, 32, 40))
-    d.polygon([(x + w * 0.55, y + h - 46), (x + w * 0.66, y + h - 58),
-               (x + w * 0.72, y + h - 44)], fill=GOLD)
-    d.polygon([(x + w * 0.58, y + h - 46), (x + w * 0.64, y + h - 56),
-               (x + w * 0.68, y + h - 46)], fill=ORANGE)
+    # moon, kept clear of the top-right chip
+    d.ellipse([x + w - 156, y + 6, x + w - 134, y + 28],
+              fill=(235, 228, 200))
+    d.ellipse([x + w - 152, y + 10, x + w - 142, y + 20],
+              fill=(210, 200, 170))
+    # two smokestacks, leaning right, with drifting smoke
+    for sx, sh in [(x + 96, 26), (x + 128, 32)]:
+        d.polygon([(sx, y + h - 46), (sx + 12, y + h - 46),
+                   (sx + 16, y + h - 46 - sh), (sx + 4, y + h - 46 - sh)],
+                  fill=(52, 56, 66))
+    for ex, ey, er in [(x + 110, y + h - 86, 10), (x + 132, y + h - 96, 8),
+                       (x + 154, y + h - 88, 11)]:
+        d.ellipse([ex - er, ey - er // 2, ex + er, ey + er // 2],
+                  fill=(120, 122, 128))
+    # capsized hull: long dark wedge, bow up on the right
+    d.polygon([(x + 16, y + h - 30), (x + w * 0.60, y + h - 44),
+               (x + w - 18, y + h - 22), (x + w - 26, y + h - 14),
+               (x + 28, y + h - 14)], fill=(30, 34, 44))
+    # deck stripe + lit portholes
+    d.line([(x + 30, y + h - 28), (x + w - 30, y + h - 24)],
+           fill=(70, 78, 92), width=2)
+    for px in range(x + 48, x + w - 60, 26):
+        d.ellipse([px, y + h - 26, px + 4, y + h - 22], fill=(255, 214, 110))
+    # fire glow at the waterline, mid-ship
+    fx = x + w * 0.62
+    d.ellipse([fx - 20, y + h - 48, fx + 20, y + h - 22],
+              fill=(255, 150, 50))
+    d.polygon([(fx - 16, y + h - 30), (fx, y + h - 54),
+               (fx + 16, y + h - 30)], fill=(255, 110, 30))
+    d.polygon([(fx - 9, y + h - 30), (fx, y + h - 48),
+               (fx + 9, y + h - 30)], fill=(255, 210, 90))
     # sea: horizontal streaks, orange reflection under the fire
-    for i, yy in enumerate(range(y + h - 16, y + h - 2, 4)):
+    for i, yy in enumerate(range(y + h - 14, y + h - 2, 4)):
         col = ORANGE if i % 3 == 0 else (52, 96, 140)
         d.line([(x + 8 + (i % 2) * 10, yy),
                 (x + w - 8 - (i % 2) * 6, yy)], fill=col, width=2)
     # two drifting drone silhouettes
-    d.ellipse([x + 26, y + 20, x + 34, y + 26], fill=GREY)
-    d.ellipse([x + w - 70, y + 30, x + w - 62, y + 36], fill=GREY)
+    d.ellipse([x + 26, y + 20, x + 36, y + 27], fill=GREY)
+    d.ellipse([x + w - 70, y + 30, x + w - 60, y + 37], fill=GREY)
 
 
 def sc_conference(d, x, y, w, h):
@@ -300,19 +327,33 @@ def sc_conference(d, x, y, w, h):
         px = x + 8 + i * (w - 16) // 5
         rect(d, px, y + 6, px + (w - 16) // 5 - 6, y + h - 46,
              fill=(196, 158, 104), outline=(120, 88, 56), width=1)
-    # big wall clock
-    cx, cy = x + w // 2, y + 24
+    # ceiling lights
+    for cx in (x + 30, x + w - 30):
+        d.ellipse([cx - 8, y + 2, cx + 8, y + 8], fill=(255, 230, 150))
+    # big wall clock, kept clear of the people standing below
+    cx, cy = x + w // 2, y + 22
     d.ellipse([cx - 20, cy - 16, cx + 20, cy + 16], fill=WHITE, outline=INK, width=2)
     d.line([(cx, cy), (cx, cy - 11)], fill=INK, width=2)
     d.line([(cx, cy), (cx + 9, cy)], fill=INK, width=2)
-    scene_label(d, cx - 34, cy + 20, "2 DAYS OVER", DARKRED, size=12)
-    # long table with a red gavel line
+    scene_label(d, cx - 34, cy + 18, "2 DAYS OVER", DARKRED, size=12)
+    # chairs behind the long table
+    for cx in [0.10, 0.28, 0.48, 0.68, 0.88]:
+        bx = x + int(w * cx)
+        rect(d, bx - 8, y + h - 46, bx + 8, y + h - 30, fill=(96, 66, 40))
+    # long table with a white nameplate and a red gavel line
     rect(d, x + 10, y + h - 30, x + w - 10, y + h - 16, fill=(96, 66, 40))
-    d.line([(x + w // 2 - 34, y + h - 23), (x + w // 2 + 34, y + h - 23)],
-           fill=RED, width=3)
-    for i, sx in enumerate([0.14, 0.38, 0.64, 0.86]):
-        person(d, x + int(w * sx), y + h - 52,
-               [(40, 70, 120), (150, 40, 40), (40, 110, 60), (90, 70, 130)][i],
+    rect(d, x + w // 2 - 40, y + h - 28, x + w // 2 + 40, y + h - 18,
+         fill=WHITE)
+    d.line([(x + w // 2 - 32, y + h - 25), (x + w // 2 + 32, y + h - 25)],
+           fill=RED, width=2)
+    d.line([(x + w // 2 - 32, y + h - 21), (x + w // 2 + 8, y + h - 21)],
+           fill=RED, width=2)
+    # darker floor band below the table
+    rect(d, x, y + h - 16, x + w, y + h, fill=(110, 76, 46))
+    for i, sx in enumerate([0.08, 0.24, 0.40, 0.56, 0.72, 0.90]):
+        person(d, x + int(w * sx), y + h - 56,
+               [(40, 70, 120), (150, 40, 40), (40, 110, 60), (90, 70, 130),
+                (30, 90, 90), (140, 110, 40)][i],
                h=18)
 
 
@@ -329,11 +370,19 @@ def sc_rescue(d, x, y, w, h):
     d.polygon([(x + w - 34, y + 20), (x + w - 14, y + 20),
                (x + w - 44, y + h - 30), (x + w - 62, y + h - 30)],
               fill=(255, 240, 170))
-    # stretcher with a blue blanket
+    # stretcher with a blue blanket, legs, and a headlamp glow
     rect(d, x + w // 2 - 34, y + h - 22, x + w // 2 + 34, y + h - 14,
          fill=WHITE)
     rect(d, x + w // 2 - 34, y + h - 22, x + w // 2 + 6, y + h - 14,
          fill=(40, 110, 190))
+    rect(d, x + w // 2 - 28, y + h - 14, x + w // 2 - 24, y + h - 8,
+         fill=INK)
+    rect(d, x + w // 2 + 24, y + h - 14, x + w // 2 + 28, y + h - 8,
+         fill=INK)
+    # rubble detail on the mounds
+    for rx, ry in [(x + 12, y + h - 12), (x + 40, y + h - 8),
+                   (x + w - 44, y + h - 10), (x + w - 16, y + h - 14)]:
+        rect(d, rx, ry, rx + 10, ry + 4, fill=(52, 48, 54))
     person(d, x + 16, y + h - 34, (232, 110, 40), h=16)
     person(d, x + w - 20, y + h - 34, (232, 110, 40), h=16)
     scene_label(d, x + 6, y + 4, "14 HOURS", INK, size=12, bg=(255, 240, 170))
@@ -341,9 +390,14 @@ def sc_rescue(d, x, y, w, h):
 
 def sc_awacs(d, x, y, w, h):
     rect(d, x, y, x + w, y + h, fill=PALESKY)
-    for cx, cy, r in [(30, 12, 12), (w - 40, 10, 10), (w // 2 + 30, 22, 9)]:
+    for cx, cy, r in [(30, 12, 12), (w - 40, 10, 10), (w // 2 + 30, 22, 9),
+                      (w - 78, 30, 7), (58, 26, 7)]:
         d.ellipse([x + cx - r, y + cy - r // 2, x + cx + r, y + cy + r // 2],
                   fill=WHITE)
+    # distant small plane, top-right
+    d.ellipse([x + w - 58, y + 6, x + w - 38, y + 12], fill=(210, 216, 222))
+    d.polygon([(x + w - 44, y + 7), (x + w - 36, y + 4),
+               (x + w - 36, y + 10)], fill=(210, 216, 222))
     # fuselage + radar dome + tail
     d.ellipse([x + w // 2 - 12, y + 12, x + w // 2 + 12, y + 30],
               fill=LIGHTGREY)
@@ -366,10 +420,17 @@ def sc_awacs(d, x, y, w, h):
 
 def sc_temple(d, x, y, w, h):
     rect(d, x, y, x + w, y + h, fill=PALESKY)
+    # three mountains, snow-capped, for depth
     d.polygon([(x, y + h - 22), (x + w // 3, y + 12),
                (x + 2 * w // 3, y + h - 22)], fill=(150, 150, 155))
+    d.polygon([(x + w // 3, y + 12), (x + w // 3 + 10, y + 22),
+               (x + w // 3 - 10, y + 22)], fill=WHITE)
     d.polygon([(x + w // 2, y + h - 22), (x + w - 10, y + 20),
                (x + w, y + h - 22)], fill=(120, 120, 128))
+    d.polygon([(x + w - 10, y + 20), (x + w - 2, y + 28),
+               (x + w - 18, y + 28)], fill=WHITE)
+    d.polygon([(x + w // 4, y + h - 22), (x + w // 2, y + 26),
+               (x + 3 * w // 4, y + h - 22)], fill=(135, 135, 142))
     # red temple with white columns
     rect(d, x + 26, y + h - 34, x + w - 26, y + h - 14, fill=(172, 40, 40))
     for cx in range(x + 34, x + w - 30, 18):
@@ -417,14 +478,17 @@ def sc_quake(d, x, y, w, h):
         pts.append((x + 4 + i * (w - 8) // 8,
                     y + 22 + (14 if i % 2 else -6)))
     d.line(pts, fill=(255, 214, 60), width=2)
-    # white wave arcs + down arrow (deep)
-    for i, yy in enumerate(range(y + h - 22, y + h - 6, 5)):
-        d.arc([x + w - 44, yy - 6, x + w - 8, yy + 6], 0, 180,
-              fill=WHITE, width=2)
-    d.line([(x + w - 26, y + h - 24), (x + w - 26, y + h - 8)],
-           fill=WHITE, width=2)
-    d.polygon([(x + w - 31, y + h - 12), (x + w - 21, y + h - 12),
-               (x + w - 26, y + h - 4)], fill=WHITE)
+    # white wave lines + a clean down arrow (deep)
+    for yy in (y + h - 20, y + h - 12, y + h - 5):
+        pts = [(x + 6, yy)]
+        for i in range(1, 7):
+            pts.append((x + 6 + i * (w - 52) // 6,
+                        yy + (3 if i % 2 else -3)))
+        d.line(pts, fill=WHITE, width=2)
+    ax = x + w - 24
+    d.line([(ax, y + h - 26), (ax, y + h - 8)], fill=WHITE, width=3)
+    d.polygon([(ax - 6, y + h - 12), (ax + 6, y + h - 12),
+               (ax, y + h - 4)], fill=WHITE)
     draw_text(d, (x + w - 6, y + 4), "601 KM", F(SANSB, 12), WHITE,
               anchor="ra")
 
@@ -446,8 +510,17 @@ def sc_trophy(d, x, y, w, h):
     d.arc([tx + 14, ty + 2, tx + 24, ty + 14], 270, 90, fill=GOLD, width=3)
     person(d, x + 18, y + h - 26, (200, 40, 40), h=14, arm_up=True)
     person(d, x + w - 22, y + h - 26, (40, 40, 180), h=14)
-    for sx, sy in [(30, 10), (w - 34, 14), (w // 2 + 40, 8)]:
-        d.ellipse([x + sx, y + sy, x + sx + 3, y + sy + 3], fill=GOLD)
+    # crowd dots along the stadium arc + a match ball
+    import random as _rnd
+    _r = _rnd.Random(5)
+    for _ in range(16):
+        cx = x + _r.randint(12, w - 12)
+        cy = y + _r.randint(4, h - 26)
+        d.ellipse([cx, cy, cx + 3, cy + 3],
+                  fill=_r.choice([(255, 220, 90), (255, 255, 255),
+                                  (255, 140, 90), (140, 200, 255)]))
+    d.ellipse([x + w // 2 - 4, y + h - 12, x + w // 2 + 2, y + h - 6],
+              fill=WHITE)
     scene_label(d, x + 6, y + h - 16, "104 MATCHES", WHITE, size=11,
                 bg=(30, 90, 50))
 
@@ -536,15 +609,15 @@ def sc_tennis(d, x, y, w, h):
     # net across the middle
     d.line([(x + 6, y + h // 2 - 8), (x + w - 6, y + h // 2 - 8)],
            fill=INK, width=2)
-    # gold trophy + player + red cart
+    # gold trophy + celebrating player + ball boy with a ball
     tx, ty = x + 14, y + 6
     d.ellipse([tx, ty, tx + 14, ty + 14], fill=GOLD)
     rect(d, tx + 5, ty + 14, tx + 9, ty + 20, fill=GOLD)
     rect(d, tx - 1, ty + 20, tx + 15, ty + 23, fill=GOLD)
     person(d, x + w // 2 + 6, y + h - 30, WHITE, h=16, arm_up=True)
-    rect(d, x + w - 30, y + h - 16, x + w - 8, y + h - 8, fill=(180, 40, 40))
-    d.ellipse([x + w - 26, y + h - 8, x + w - 22, y + h - 4], fill=INK)
-    d.ellipse([x + w - 14, y + h - 8, x + w - 10, y + h - 4], fill=INK)
+    person(d, x + w - 24, y + h - 30, (40, 40, 40), h=14)
+    d.ellipse([x + w - 40, y + h - 12, x + w - 34, y + h - 6],
+              fill=(200, 220, 60))
     scene_label(d, x + 6, y + h - 14, "ATP FINALS", WHITE, size=11,
                 bg=(30, 90, 50))
 
@@ -609,13 +682,32 @@ def sc_kospi(d, x, y, w, h):
 
 def sc_airport(d, x, y, w, h):
     rect(d, x, y, x + w, y + h, fill=PALESKY)
-    # white plane silhouettes
-    for px, py, s in [(w // 2 - 10, 22, 1.0), (w - 56, 34, 0.7)]:
-        d.ellipse([x + px, y + py, x + px + 26 * s, y + py + 8 * s],
+    # clouds, kept clear of the CANCELLED sign and the tower
+    for cx, cy, r in [(w // 2 + 22, 12, 9), (w - 92, 26, 8),
+                      (30, 34, 7)]:
+        d.ellipse([x + cx - r, y + cy - r // 2, x + cx + r, y + cy + r // 2],
                   fill=WHITE)
-        d.polygon([(x + px + 20 * s, y + py + 2 * s),
-                   (x + px + 30 * s, y + py - 4 * s),
-                   (x + px + 30 * s, y + py + 4 * s)], fill=WHITE)
+    # control tower: shaft + cab with a lit window
+    tx = x + w - 34
+    rect(d, tx, y + 12, tx + 8, y + h - 22, fill=(120, 128, 138))
+    rect(d, tx - 4, y + 6, tx + 12, y + 16, fill=(70, 80, 92))
+    rect(d, tx - 2, y + 8, tx + 10, y + 14, fill=(140, 200, 230))
+    # terminal block with lit windows
+    rect(d, x + 8, y + h - 34, x + w - 44, y + h - 12, fill=(96, 108, 124))
+    rect(d, x + 8, y + h - 34, x + w - 44, y + h - 28, fill=(70, 82, 100))
+    for wx in range(x + 14, x + w - 50, 14):
+        rect(d, wx, y + h - 26, wx + 7, y + h - 18, fill=(255, 214, 110))
+    # jet bridge from the terminal up to a parked plane
+    d.line([(x + w - 44, y + h - 24), (x + w - 44, y + h - 40)],
+           fill=(200, 200, 200), width=3)
+    d.ellipse([x + w - 42, y + h - 46, x + w - 6, y + h - 36],
+              fill=WHITE)
+    d.polygon([(x + w - 12, y + h - 44), (x + w - 2, y + h - 50),
+               (x + w - 2, y + h - 40)], fill=WHITE)
+    # runway with centre dashes
+    rect(d, x, y + h - 12, x + w, y + h, fill=(90, 90, 92))
+    for wx in range(x + 8, x + w - 8, 24):
+        rect(d, wx, y + h - 7, wx + 12, y + h - 5, fill=WHITE)
     # CANCELLED sign, red outline, top-left
     fnt = F(SANSB, 11)
     tw = int(text_w(d, "CANCELLED", fnt))
@@ -623,7 +715,6 @@ def sc_airport(d, x, y, w, h):
     rect(d, sx, y + 4, sx + tw + 12, y + 19, fill=WHITE, outline=RED,
          width=2)
     draw_text(d, (sx + 6, y + 6), "CANCELLED", fnt, RED)
-    rect(d, x, y + h - 8, x + w, y + h, fill=(110, 170, 90))
 
 
 # -------------------------------------------------------------- cards -----
@@ -826,18 +917,29 @@ LAND = [
     (9, 24, 24),
 ]
 
-# pin number -> (grid col, grid row, label or None, label side, label dy)
-# side: l = left of pin, r = right, a = above, b = below
+# pin number -> (grid col, grid row, dx, dy, label, label x, label y,
+# label anchor). (dx, dy) spread the drawn pin off its grid anchor so
+# neighbouring pins stay readable; labels sit in clear space with a thin
+# leader line from the pin. Positions are approximate by design.
 PINS = [
-    (1, 9, 3, None, None, 0), (2, 47, 4, "Benghazi", "r", 2),
-    (3, 53, 3, "Antalya", "r", 0), (4, 46, 2, None, None, 0),
-    (5, 62, 4, None, None, 0), (6, 53, 5, None, None, 0),
-    (7, 73, 7, None, None, 0), (8, 43, 2, None, None, 0),
-    (9, 10, 4, None, None, 0), (10, 68, 4, None, None, 0),
-    (11, 73, 4, "Taipei", "l", 0), (12, 38, 2, "London", "a", 0),
-    (13, 44, 3, None, None, 0), (14, 69, 6, None, None, 0),
-    (15, 48, 6, None, None, 0), (16, 72, 2, "Seoul", "l", 0),
-    (17, 41, 2, "Brussels", "b", 0), (18, 50, 1, "Dymer", "r", 0),
+    (1, 9, 3, -4, -5, None, 0, 0, None),
+    (2, 47, 4, 5, 7, "Benghazi", 306, 914, "la"),
+    (3, 53, 3, 2, -5, "Antalya", 338, 901, "la"),
+    (4, 46, 2, 3, -6, None, 0, 0, None),
+    (5, 62, 4, -3, 3, None, 0, 0, None),
+    (6, 53, 5, 8, 10, None, 0, 0, None),
+    (7, 73, 7, 3, 0, None, 0, 0, None),
+    (8, 43, 2, -3, -8, None, 0, 0, None),
+    (9, 10, 4, 2, 3, None, 0, 0, None),
+    (10, 68, 4, -10, -3, None, 0, 0, None),
+    (11, 73, 4, 3, -3, "Taipei", 428, 938, "ma"),
+    (12, 38, 2, -12, -6, "London", 220, 896, "ra"),
+    (13, 44, 3, 3, 3, None, 0, 0, None),
+    (14, 69, 6, -2, 5, None, 0, 0, None),
+    (15, 48, 6, 9, 9, None, 0, 0, None),
+    (16, 72, 2, -3, -6, "Seoul", 428, 895, "ra"),
+    (17, 41, 2, -8, 6, "Brussels", 248, 924, "ma"),
+    (18, 50, 1, 4, -7, "Dymer", 314, 881, "ma"),
 ]
 
 BRIEFS = [
@@ -878,24 +980,23 @@ def draw_map(d):
             py = y0 + 4 + row * ch + ch / 2
             d.ellipse([px - 1.6, py - 1.6, px + 1.6, py + 1.6], fill=MAPDOT)
     fnt = F(SANSB, 9)
-    for num, col, row, label, side, dy in PINS:
-        px = x0 + col * cw + cw / 2
-        py = y0 + 4 + row * ch + ch / 2
-        d.ellipse([px - 7, py - 7, px + 7, py + 7], fill=DARKRED,
-                  outline=WHITE, width=1)
-        d.text((px, py - 5), str(num), font=fnt, fill=WHITE, anchor="ma")
+    for num, col, row, dx, dy, label, lx, ly, anchor in PINS:
+        px = x0 + col * cw + cw / 2 + dx
+        py = y0 + 4 + row * ch + ch / 2 + dy
         if label:
-            if side == "r":
-                draw_text(d, (px + 9, py - 5 + dy), label, fnt, INK)
-            elif side == "l":
-                draw_text(d, (px - 9, py - 5 + dy), label, fnt, INK,
-                          anchor="ra")
-            elif side == "a":
-                draw_text(d, (px, py - 16 + dy), label, fnt, INK,
-                          anchor="ma")
-            else:  # below
-                draw_text(d, (px, py + 8 + dy), label, fnt, INK,
-                          anchor="ma")
+            # thin leader from the pin to its label, drawn under the pin
+            d.line([(px, py), (lx, ly + 4)], fill=GREY, width=1)
+        d.ellipse([px - 6, py - 6, px + 6, py + 6], fill=DARKRED,
+                  outline=WHITE, width=1)
+        d.text((px, py - 5), str(num), font=F(SANSB, 8), fill=WHITE,
+               anchor="ma")
+        if label:
+            if anchor == "ra":
+                draw_text(d, (lx, ly), label, fnt, INK, anchor="ra")
+            elif anchor == "ma":
+                draw_text(d, (lx, ly), label, fnt, INK, anchor="ma")
+            else:
+                draw_text(d, (lx, ly), label, fnt, INK)
     draw_text(d, (x0 + 4, y1 - 10),
               "RED NUMBERS MARK STORIES 1\u201318 \u00b7 POSITIONS APPROXIMATE",
               F(SANSB, 8), INK)
